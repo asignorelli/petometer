@@ -1,8 +1,10 @@
+import { GameProvider } from "@/context/context";
 import { Tabs } from "expo-router";
 
 export default function RootLayout() {
   return (
-    <Tabs>
+    <GameProvider>
+      <Tabs>
       <Tabs.Screen
         name="index"
         options={{ title: "Steps" }}
@@ -15,6 +17,7 @@ export default function RootLayout() {
         name="marketplace"
         options={{ title: "Marketplace" }}
       />
-    </Tabs>
+      </Tabs>
+    </GameProvider>
   );
 }

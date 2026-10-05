@@ -1,20 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
-
+import { Text, View } from "react-native";
 export default function MarketplaceScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Marketplace Tab</Text>
+    //RENDER ----------------------------
+    <View>
+      <Text>Marketplace Tab</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 20,
-  },
-});
