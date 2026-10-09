@@ -1,6 +1,6 @@
 import { useGame } from "@/context/context";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 //
 //--------------  STEP COUNTER SCREEN ------------------------
 //
@@ -99,41 +99,56 @@ export default function StepsScreen() {
   //RENDER ----------------------------
   return(
     <View>
-      <Text> Steps: {steps}</Text>
-      <Text> Step Goal: {stepGoal}</Text>
-      <Text> Progress: {percentage.toFixed(2)}%</Text>
-      <Text> Streak Count: {streakCount}</Text>
-      <Text> Coin Balance: {coinBal}</Text>
+      <Text style={styles.paragraph}> Steps: {steps}</Text>
+      <Text style={styles.paragraph}> Step Goal: {stepGoal}</Text>
+      <Text style={styles.paragraph}> Progress: {percentage.toFixed(2)}%</Text>
+      <Text style={styles.paragraph}> Streak Count: {streakCount}</Text>
+      <Text style={styles.paragraph}> Coin Balance: {coinBal}</Text>
       <Pressable onPress={addSteps}>
-        <Text>Add 500 Steps</Text>
+        <Text style={styles.paragraph}>Add 500 Steps</Text>
       </Pressable>
       <Pressable onPress={collectCoins}>
-        <Text>Collect Coins</Text>
+        <Text style={styles.paragraph}>Collect Coins</Text>
       </Pressable>
       <Pressable onPress={increaseGoal}>
-        <Text>Increase Goal</Text>
+        <Text style={styles.paragraph}>Increase Goal</Text>
       </Pressable>
       <Pressable onPress={decreaseGoal}>
-        <Text>Decrease Goal</Text>
+        <Text style={styles.paragraph}>Decrease Goal</Text>
       </Pressable>
       <Pressable onPress={resetSteps}>
-        <Text>Reset Steps</Text>
+        <Text style={styles.paragraph}>Reset Steps</Text>
       </Pressable>
       <Pressable onPress={resetCoins}>
-        <Text>Reset Coins</Text>
+        <Text style={styles.paragraph}>Reset Coins</Text>
       </Pressable>
       <Pressable onPress={updateStreakCount}>
-        <Text>Update Streak</Text>
+        <Text style={styles.paragraph}>Update Streak</Text>
       </Pressable>
       <Pressable onPress={drinkWater}>
-        <Text>Drink Water</Text>
+        <Text style={styles.paragraph}>Drink Water</Text>
       </Pressable>
       <Pressable onPress={exercise}>
-        <Text>Exercise</Text>
+        <Text style={styles.paragraph}>Exercise</Text>
       </Pressable>
       <Pressable onPress={sleep}>
-        <Text>Sleep</Text>
+        <Text style={styles.paragraph}>Sleep</Text>
       </Pressable>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+    padding: 8,
+  },
+  paragraph: {
+    margin: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
