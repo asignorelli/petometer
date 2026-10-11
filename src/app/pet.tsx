@@ -1,5 +1,5 @@
 import { useGame } from "@/context/context";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 //
@@ -14,20 +14,20 @@ export default function PetScreen() {
 
   const [petHealth, setPetHealth] = useState<number>(100);
   const [petHappiness, setPetHappiness] = useState<number>(100);
-  const { foodInventory, coinBal, eatFood, addFood, hats, buyHat, equipHat, furnitureOwned, buyFurniture, placeFurniture } = useGame();
+  const { foodInventory, coinBal, resetInventory, eatFood, addFood, clothing, buyClothing, equipClothing, furnitureOwned, buyFurniture, placeFurniture } = useGame();
 
-  //for testing purposes only
- useEffect(() => {
-  addFood("apple", "Apple", 10);
-  addFood("salad", "Salad", 25);
-  addFood("banana", "Banana", 15);
-  buyHat("cool_hat", "Cool Hat", 10);
-  buyFurniture("blue_chair", "Blue Chair", "chair", 5);
-  buyFurniture("red_chair", "Red Chair", "chair", 8);
-  buyFurniture("blue_wall", "Blue Wall", "wall", 6);
-  buyFurniture("green_wall", "Green Wall", "wall", 7);  // second wall, for testing
-  buyFurniture("pink_wall", "Pink Wall", "wall", 9);    // third wall, for testing
-}, []);
+  // //for testing purposes only
+  // useEffect(() => {
+  //   addFood("apple", "Apple", 10);
+  //   addFood("salad", "Salad", 25);
+  //   addFood("banana", "Banana", 15);
+  //   buyClothing("cool_hat", "Cool Hat", 10);
+  //   buyFurniture("blue_chair", "Blue Chair", "chair", 5);
+  //   buyFurniture("red_chair", "Red Chair", "chair", 8);
+  //   buyFurniture("blue_wall", "Blue Wall", "wall", 6);
+  //   buyFurniture("green_wall", "Green Wall", "wall", 7);  // second wall, for testing
+  //   buyFurniture("pink_wall", "Pink Wall", "wall", 9);    // third wall, for testing
+  // }, []);
 
 
 
@@ -91,21 +91,29 @@ export default function PetScreen() {
           </Text>
         </Pressable>
       ))}
-    
-      {hats.map((hat) => (
-        <Pressable key={hat.id} onPress={() => equipHat(hat.id)}>
+      {clothing.map((hat) => (
+        <Pressable key={hat.id} onPress={() => equipClothing(hat.id)}>
           <Text style={styles.paragraph}>
-            {hat.name} {hat.owned ? "(Owned)" : "(Not Owned)"} {hat.equipped ? "(Equipped)" : ""}
+            {hat.name} {hat.equipped ? "(Equipped)" : ""}
           </Text>
         </Pressable>
       ))}
-      {furnitureOwned.map((furniture) => (
-        <Pressable key={furniture.id} onPress={() => placeFurniture(furniture.id)}>
+      {furnitureOwned.map((item) => (
+        <Pressable key={item.id} onPress={() => placeFurniture(item.id)}>
           <Text style={styles.paragraph}>
-            {furniture.name} {furniture.owned ? "(Owned)" : "(Not Owned)"} {furniture.placed ? "(Placed)" : ""}
+            {item.name} {item.placed ? "(Placed)" : ""}
           </Text>
         </Pressable>
       ))}
+      <Pressable onPress={() => decreaseHealth(50)}>
+        <Text style={styles.paragraph}>Decay Health(-50 Health)</Text>
+      </Pressable>
+      <Pressable onPress={() => decreaseHappiness(50)}>
+        <Text style={styles.paragraph}>Decay Happiness(-50 Happiness)</Text>
+      </Pressable>
+      <Pressable onPress={() => resetInventory()}>
+        <Text style={styles.paragraph}>Reset Inventory</Text>
+      </Pressable>
     </View>
   );
 }

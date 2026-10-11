@@ -18,10 +18,11 @@ type GameContextValue = {
   eatFood: (foodId: string) => number | null;
   addCoins: (amount: number) => void;
   resetCoinBalance: () => void;
+  resetInventory: () => void;
   spendCoins: (amount: number) => boolean;
-  buyHat: (id: string, name: string, moodBoost: number) => void;
-  equipHat: (id: string) => void;
-  hats: Clothing[];
+  buyClothing: (id: string, name: string, moodBoost: number) => void;
+  equipClothing: (id: string) => void;
+  clothing: Clothing[];
   furnitureOwned: Furniture[];
   buyFurniture: (id: string, name: string, category: string, moodBoost: number) => void;
   placeFurniture: (id: string) => void;
@@ -61,16 +62,23 @@ const GameContext = createContext<GameContextValue | undefined>(undefined);
 export function GameProvider({ children }: { children: React.ReactNode }) {
   const [coinBal, setCoinBal] = useState(0);
   const [foodInventory, setFoodInventory] = useState<Food[]>([]);
-  const [hats, setHats] = useState<Clothing[]>([]);
+  const [clothing, setClothing] = useState<Clothing[]>([]);
   const [furnitureOwned, setFurnitureOwned] = useState<Furniture[]>([]);
 
-  function addCoins(amount: number) {
-    setCoinBal(prev => prev + amount);
-  }
+  //reset functions for demo
   function resetCoinBalance() {
     setCoinBal(0);
   }
+  function resetInventory() {
+    setFoodInventory([]);
+    setClothing([]);
+    setFurnitureOwned([]);
+  }
 
+  //coin functions
+  function addCoins(amount: number) {
+    setCoinBal(prev => prev + amount);
+  }
   function spendCoins(amount: number) {
     // 1. check: is coinBal >= amount?
     // 2. if yes: setCoinBal to coinBal - amount, return true
@@ -99,12 +107,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       //if yes, add to quantity
       for (let i = 0; i < newInventory.length; i++) {
         if (newInventory[i].id === foodId) {
-          newInventory[i].quantity += 1;
+
+          //i want a max of 99 foods each
+          if(newInventory[i].quantity < 99) {
+            newInventory[i].quantity += 1;
+          }
           found = true;
           break;
         }
       }
-      //otherwise, make new food in inventory
+      //if passes checks, make new food in inventory
       if (!found) {
         newInventory.push({ id: foodId, name, healthValue, quantity: 1 });
       }
@@ -131,43 +143,43 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   //CLOTHING LOGIC ---------------------
   //handles buying and equipping hats for the pet
-  function buyHat(id: string, name: string, moodBoost: number) {
-    setHats(prev => {
-      const newHats = [...prev];
+  function buyClothing(id: string, name: string, moodBoost: number) {
+    setClothing(prev => {
+      const newClothing = [...prev];
     let found = false;
 
     //check if hat is owned
-    for (let i = 0; i < newHats.length; i++) {
-      if (newHats[i].id === id) {
-        newHats[i].owned = true;
+    for (let i = 0; i < newClothing.length; i++) {
+      if (newClothing[i].id === id) {
+        newClothing[i].owned = true;
         found = true;
         break;
       }
     }
-    //if not found, add new hat
+    //if not found, add new clothing item
     if (!found) {
-      newHats.push({ id, name, owned: true, equipped: false, moodBoost });
+      newClothing.push({ id, name, owned: true, equipped: false, moodBoost });
     }
-      return newHats;
+      return newClothing;
     });
   }
 
   //ensures only one hat can be equipped at a time, and handles unequip
-  function equipHat(id: string) {
-    setHats(prev=> {
-    const newHats = [...prev];
+  function equipClothing(id: string) {
+    setClothing(prev=> {
+    const newClothing = [...prev];
 
-    //loop through hats to equip/unequip the selected hat
-    for (let i = 0; i < newHats.length; i++) {
-      if (newHats[i].id === id) {
-        const wasEquipped = newHats[i].equipped;
-        newHats[i].equipped = !wasEquipped;
+    //loop through clothing to equip/unequip the selected item
+    for (let i = 0; i < newClothing.length; i++) {
+      if (newClothing[i].id === id) {
+        const wasEquipped = newClothing[i].equipped;
+        newClothing[i].equipped = !wasEquipped;
       }
       else {
-        newHats[i].equipped = false; //ALWAYS UNEQUIP WHATEVER ELSE IS ON
+        newClothing[i].equipped = false; //ALWAYS UNEQUIP WHATEVER ELSE IS ON
       }
     }
-    return newHats;
+    return newClothing;
   });
   }
 
@@ -232,12 +244,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     foodInventory,
     addCoins,
     resetCoinBalance,
+    resetInventory,
     spendCoins,
     addFood,
     eatFood,
-    buyHat,
-    equipHat,
-    hats,
+    buyClothing,
+    equipClothing,
+    clothing,
     furnitureOwned,
     buyFurniture,
     placeFurniture,
