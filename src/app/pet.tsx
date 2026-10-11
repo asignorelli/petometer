@@ -40,22 +40,41 @@ export default function PetScreen() {
   function increaseHappiness(value: number) {
     setPetHappiness(prevHappiness => Math.min(prevHappiness + value, 100));
   }
+  //calculate the mood boost gained from equipping clothing/furniture item
+  //the effect is gained on equipped and lost on unequip
+  function equipsMoodBoost(): number {
+    let boost = 0;
+    for(let i = 0; i < clothing.length; i++){
+      if(clothing[i].equipped){
+        boost += clothing[i].moodBoost;
+      }
+    }
+    for(let i = 0; i < furnitureOwned.length; i++){
+      if(furnitureOwned[i].placed){
+        boost += furnitureOwned[i].moodBoost;
+      }
+    }
+   return boost;
+  }
+  //separate the base happiness from the mood boost
+  //this is cuz i want this to change dependent on equpping/unequipping items
+  const displayHappiness = Math.min(petHappiness + equipsMoodBoost(), 100);
 
   //health functions
   function increaseHealth(value: number) {
-    if (petHappiness > 80) {
+    if (displayHappiness > 80) {
       value = value * 2;
     }
-    else if (petHappiness < 20) {
+    else if (displayHappiness < 20) {
       value = Math.floor(value / 2);
     }
     setPetHealth(prevHealth => Math.min(prevHealth + value, 100));
   }
   function decreaseHealth(value: number) {
-    if (petHappiness > 80) {
+    if (displayHappiness > 80) {
       value = Math.floor(value / 2);
     }
-    else if (petHappiness < 20) {
+    else if (displayHappiness < 20) {
       value = value * 2;
     }
     setPetHealth(prevHealth => Math.max(prevHealth - value, 0));
@@ -81,7 +100,7 @@ export default function PetScreen() {
       />
       <Text style={styles.paragraph}>Pet Name: {petName}</Text>
       <Text style={styles.paragraph}>Health: {petHealth}</Text>
-      <Text style={styles.paragraph}>Happiness: {petHappiness}</Text>
+      <Text style={styles.paragraph}>Happiness: {displayHappiness}</Text>
       <Text style={styles.paragraph}>Coins: {coinBal}</Text>
 
       {foodInventory.map((item) => (
