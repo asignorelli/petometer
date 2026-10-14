@@ -1,6 +1,9 @@
+import AppButton from "@/components/AppButton";
+import CoinDisplay from "@/components/CoinDisplay";
+import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 //
 //--------------  STEP COUNTER SCREEN ------------------------
 //
@@ -126,61 +129,36 @@ export default function StepsScreen() {
     }
 
     //RENDER ----------------------------
+    //new and improved temp style sheet that will change when I find assets
+    //basically just for the demo so its not an ugly list of text
     return (
-      <View>
-        <Text style={styles.paragraph}> Steps: {steps}</Text>
-        <Text style={styles.paragraph}> Step Goal: {stepGoal}</Text>
-        <Text style={styles.paragraph}> Progress: {percentage.toFixed(2)}%</Text>
-        <Text style={styles.paragraph}> Streak Count: {streakCount}</Text>
-        <Text style={styles.paragraph}> Coin Balance: {coinBal}</Text>
-        <Pressable onPress={addSteps}>
-          <Text style={styles.paragraph}>Add 500 Steps</Text>
-        </Pressable>
-        <Pressable onPress={collectCoins}>
-          <Text style={styles.paragraph}>Collect Coins</Text>
-        </Pressable>
-        <Pressable onPress={increaseGoal}>
-          <Text style={styles.paragraph}>Increase Goal</Text>
-        </Pressable>
-        <Pressable onPress={decreaseGoal}>
-          <Text style={styles.paragraph}>Decrease Goal</Text>
-        </Pressable>
-        <Pressable onPress={resetSteps}>
-          <Text style={styles.paragraph}>Reset Steps</Text>
-        </Pressable>
-        <Pressable onPress={resetCoins}>
-          <Text style={styles.paragraph}>Reset Coins</Text>
-        </Pressable>
-        <Pressable onPress={updateStreakCount}>
-          <Text style={styles.paragraph}>Update Streak</Text>
-        </Pressable>
-        <Pressable onPress={drinkWater}>
-          <Text style={styles.paragraph}>Drink Water</Text>
-        </Pressable>
-        <Pressable onPress={exercise}>
-          <Text style={styles.paragraph}>Exercise</Text>
-        </Pressable>
-        <Pressable onPress={sleep}>
-          <Text style={styles.paragraph}>Sleep</Text>
-        </Pressable>
-        <Pressable onPress={simulateDay}>
-          <Text style={styles.paragraph}>Simulate Day</Text>
-        </Pressable>
+      <View style={sharedStyles.container}>
+      <View style={sharedStyles.topRow}>
+        <View style={{ flex: 1 }} />
+        <Text>Streak: {streakCount}</Text>
+        <CoinDisplay amount={coinBal} />
       </View>
-    )
-  }
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      backgroundColor: '#ecf0f1',
-      padding: 8,
-    },
-    paragraph: {
-      margin: 10,
-      fontSize: 20,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-  });
+      <Text style={sharedStyles.bigNumber}>{steps}</Text>
+      <Text style={sharedStyles.subText}>{percentage.toFixed(0)}% of {stepGoal}</Text>
+      
+        <Text style={sharedStyles.cardLabel}>Bank: {stepBank/10}</Text>
+        <AppButton onPress={collectCoins} label="Collect Coins" />
+
+        <Text style={sharedStyles.cardLabel}>Daily Goals</Text>
+        <AppButton onPress={drinkWater} label={hasDrankWater ? "DONE" : "Drink Water"} />
+        <AppButton onPress={exercise} label={hasExercised ? "DONE" : "Exercise"} />
+        <AppButton onPress={sleep} label={hasSleptHours ? "DONE" : "Sleep"} />
+     
+        <Text style={sharedStyles.cardLabel}>Step Goal</Text>
+        <AppButton onPress={increaseGoal} label="Increase Goal" />
+        <AppButton onPress={decreaseGoal} label="Decrease Goal" />
+  
+      <View style={sharedStyles.demoCorner}>
+        <AppButton onPress={addSteps} label="Add 500 Steps" />
+        <AppButton onPress={resetSteps} label="Reset" />
+        <AppButton onPress={simulateDay} label="New Day" />
+      </View>
+    </View>
+  );
+}

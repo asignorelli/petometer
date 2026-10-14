@@ -1,7 +1,9 @@
+import AppButton from "@/components/AppButton";
+import CoinDisplay from "@/components/CoinDisplay";
+import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-
+import { ScrollView, Text, TextInput, View } from "react-native";
 //
 //--------------  PET SCREEN ------------------------
 //
@@ -16,6 +18,9 @@ export default function PetScreen() {
   const [petHappiness, setPetHappiness] = useState<number>(100);
   const { foodInventory, coinBal, resetInventory, eatFood, addFood, clothing, buyClothing, equipClothing, furnitureOwned, buyFurniture, placeFurniture } = useGame();
 
+  //for display buttons opening a new tab for feeding/equipping
+  const [openPanel, setOpenPanel] = useState<"food" | "clothing" | "furniture" | null>(null);
+  
   // //for testing purposes only
   // useEffect(() => {
   //   addFood("apple", "Apple", 10);
@@ -44,17 +49,17 @@ export default function PetScreen() {
   //the effect is gained on equipped and lost on unequip
   function equipsMoodBoost(): number {
     let boost = 0;
-    for(let i = 0; i < clothing.length; i++){
-      if(clothing[i].equipped){
+    for (let i = 0; i < clothing.length; i++) {
+      if (clothing[i].equipped) {
         boost += clothing[i].moodBoost;
       }
     }
-    for(let i = 0; i < furnitureOwned.length; i++){
-      if(furnitureOwned[i].placed){
+    for (let i = 0; i < furnitureOwned.length; i++) {
+      if (furnitureOwned[i].placed) {
         boost += furnitureOwned[i].moodBoost;
       }
     }
-   return boost;
+    return boost;
   }
   //separate the base happiness from the mood boost
   //this is cuz i want this to change dependent on equpping/unequipping items
@@ -90,57 +95,54 @@ export default function PetScreen() {
   }
 
   //RENDER ---------------------------
-  //map is used for the food/clothes/furniture as a way to dynamically change the inventory
   return (
-    <View>
+    <View style={sharedStyles.container}>
+      <View style={sharedStyles.topRow}>
+        <View style={{ flex: 1 }}>
+          <Text>Health: {petHealth}</Text>
+          <Text>Happiness: {displayHappiness}</Text>
+        </View>
+        <CoinDisplay amount={coinBal} />
+      </View>
+
       <TextInput
         value={petName}
-        onChangeText={(newText) => setPetName(newText)}
+        onChangeText={setPetName}
         placeholder="What's its name?"
+        style={{marginVertical: 8, padding: 4 }}
       />
-      <Text style={styles.paragraph}>Pet Name: {petName}</Text>
-      <Text style={styles.paragraph}>Health: {petHealth}</Text>
-      <Text style={styles.paragraph}>Happiness: {displayHappiness}</Text>
-      <Text style={styles.paragraph}>Coins: {coinBal}</Text>
 
-      {foodInventory.map((item) => (
-        <Pressable key={item.id} onPress={() => feedPet(item.id)}>
-          <Text style={styles.paragraph}>
-            Feed {item.name} (+{item.healthValue}) — own {item.quantity}
-          </Text>
-        </Pressable>
-      ))}
-      {clothing.map((hat) => (
-        <Pressable key={hat.id} onPress={() => equipClothing(hat.id)}>
-          <Text style={styles.paragraph}>
-            {hat.name} {hat.equipped ? "(Equipped)" : ""}
-          </Text>
-        </Pressable>
-      ))}
-      {furnitureOwned.map((item) => (
-        <Pressable key={item.id} onPress={() => placeFurniture(item.id)}>
-          <Text style={styles.paragraph}>
-            {item.name} {item.placed ? "(Placed)" : ""}
-          </Text>
-        </Pressable>
-      ))}
-      <Pressable onPress={() => decreaseHealth(50)}>
-        <Text style={styles.paragraph}>Decay Health(-50 Health)</Text>
-      </Pressable>
-      <Pressable onPress={() => decreaseHappiness(50)}>
-        <Text style={styles.paragraph}>Decay Happiness(-50 Happiness)</Text>
-      </Pressable>
-      <Pressable onPress={() => resetInventory()}>
-        <Text style={styles.paragraph}>Reset Inventory</Text>
-      </Pressable>
+      <View style={{ position: "absolute", right: 10, top: "40%" }}>
+        <AppButton onPress={() => setOpenPanel(openPanel === "food" ? null : "food")} label="food" />
+        <AppButton onPress={() => setOpenPanel(openPanel === "clothing" ? null : "clothing")} label="clothing" />
+        <AppButton onPress={() => setOpenPanel(openPanel === "furniture" ? null : "furniture")} label="furniture" />
+      </View>
+
+      <View style={sharedStyles.demoCorner}>
+        <AppButton onPress={() => decreaseHealth(50)} label="Decay HP" />
+        <AppButton onPress={() => decreaseHappiness(50)} label="Decay Mood" />
+        <AppButton onPress={resetInventory} label="Reset Inventory" />
+      </View>
+
+      {openPanel && (
+        <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 150, backgroundColor: "white", padding: 10 }}>
+          <AppButton onPress={() => setOpenPanel(null)} label="Close" />
+          <ScrollView horizontal>
+            {openPanel === "food" &&
+              foodInventory.map(item => (
+                <AppButton key={item.id} onPress={() => feedPet(item.id)} label={`${item.name} (${item.quantity})`} />
+              ))}
+            {openPanel === "clothing" &&
+              clothing.map(hat => (
+                <AppButton key={hat.id} onPress={() => equipClothing(hat.id)} label={`${hat.name}${hat.equipped ? " (Equipped)" : ""}`} />
+              ))}
+            {openPanel === "furniture" &&
+              furnitureOwned.map(item => (
+                <AppButton key={item.id} onPress={() => placeFurniture(item.id)} label={`${item.name}${item.placed ? " (Equipped)" : ""}`} />
+              ))}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }
-const styles = StyleSheet.create({
-  paragraph: {
-    margin: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});

@@ -1,6 +1,9 @@
+import AppButton from "@/components/AppButton";
+import CoinDisplay from "@/components/CoinDisplay";
+import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 
 //
 //-------------- MARKETPLACE LOGIC ---------------------------
@@ -117,36 +120,28 @@ export default function MarketplaceScreen() {
 
 //RENDER-----------------------------------
   return (
-    <View>
-      <Text style={styles.paragraph}>Coins: {coinBal}</Text>
-
-      <View style={{ flexDirection: "row" }}>
-        <Pressable onPress={() => setSelectedCategory("food")}>
-          <Text style={styles.paragraph}>Food</Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedCategory("clothing")}>
-          <Text style={styles.paragraph}>Clothing</Text>
-        </Pressable>
-        <Pressable onPress={() => setSelectedCategory("furniture")}>
-          <Text style={styles.paragraph}>Furniture</Text>
-        </Pressable>
+    <View style={sharedStyles.container}>
+      <View style={sharedStyles.topRow}>
+        <View style={{ flex: 1 }} />
+        <CoinDisplay amount={coinBal} />
       </View>
-      {filteredItems.map((item) => (
-        <Pressable key={item.id} onPress={() => buyItem(item.id)}>
-          <Text style={styles.paragraph}>
-            Buy {item.name} ({item.type}) - Cost: {item.cost}
-          </Text>
-        </Pressable>
-      ))}
+
+      <View style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 8 }}>
+        <AppButton onPress={() => setSelectedCategory("food")} label="Food" />
+        <AppButton onPress={() => setSelectedCategory("clothing")} label="Clothing" />
+        <AppButton onPress={() => setSelectedCategory("furniture")} label="Furniture" />
+      </View>
+
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+        {filteredItems.map(item => {
+          const owned = isBlocked(item);
+          return (
+            <View key={item.id} style={{ width: "30%", marginBottom: 10 }}>
+              <AppButton onPress={() => buyItem(item.id)} label={owned ? "SOLD" : `${item.name}\n${item.cost}`} disabled={owned} />
+            </View>
+          );
+        })}
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  paragraph: {
-    margin: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
