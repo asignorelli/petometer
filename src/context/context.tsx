@@ -107,16 +107,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       //if yes, add to quantity
       for (let i = 0; i < newInventory.length; i++) {
         if (newInventory[i].id === foodId) {
-
-          //i want a max of 99 foods each
-          if(newInventory[i].quantity < 99) {
-            newInventory[i].quantity += 1;
-          }
+          newInventory[i].quantity += 1;
           found = true;
           break;
         }
       }
-      //if passes checks, make new food in inventory
+      //otherwise, make new food in inventory
       if (!found) {
         newInventory.push({ id: foodId, name, healthValue, quantity: 1 });
       }
