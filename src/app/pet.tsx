@@ -3,8 +3,8 @@ import CoinDisplay from "@/components/CoinDisplay";
 import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { getThemeColors } from "@/utils/getThemeColors";
-import { useState } from "react";
-import { Image, ScrollView, Text, TextInput, View } from "react-native";
+import { useRef, useState } from "react";
+import { Image, ScrollView, Text, View } from "react-native";
 //
 //--------------  PET SCREEN ------------------------
 //
@@ -13,16 +13,18 @@ export default function PetScreen() {
   //VARIABLES ---------------------------
 
   //step logic
-  const [petName, setPetName] = useState<string>("");
-
   const [petHealth, setPetHealth] = useState<number>(100);
   const [petHappiness, setPetHappiness] = useState<number>(100);
-  const { foodInventory, coinBal, resetInventory, eatFood, addFood, clothing, buyClothing, 
+  const { foodInventory, coinBal, resetInventory, eatFood, addFood, clothing, buyClothing,
     equipClothing, furnitureOwned, buyFurniture, placeFurniture, rooms,
-  equipRoom } = useGame();
+    equipRoom } = useGame();
   const themeColors = getThemeColors(rooms);
+
+  //handle eating "animation" lol
+  const [isEating, setIsEating] = useState(false);
+  const eatingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   //for display buttons opening a new tab for feeding/equipping
-  const [openPanel, setOpenPanel] = useState<"food" | "clothing" | "furniture" | "room" |null>(null);
+  const [openPanel, setOpenPanel] = useState<"food" | "clothing" | "furniture" | "room" | null>(null);
 
   // //for testing purposes only
   // useEffect(() => {
@@ -40,6 +42,46 @@ export default function PetScreen() {
 
 
   //PET ACTIONS ---------------------------
+
+  //feeding actions
+  const bowIdleImages: Record<string, any> = {
+    ribbon_blue: require('@/assets/images/cat/bluebow_idle.png'),
+    ribbon_brown: require('@/assets/images/cat/brownbow_idle.png'),
+    ribbon_green: require('@/assets/images/cat/greenbow_idle.png'),
+    ribbon_pink: require('@/assets/images/cat/pinkbow_idle.png'),
+    ribbon_purple: require('@/assets/images/cat/purplebow_idle.png'),
+    ribbon_red: require('@/assets/images/cat/redbow_idle.png'),
+    ribbon_white: require('@/assets/images/cat/whitebow_idle.png'),
+    ribbon_yellow: require('@/assets/images/cat/yellowbow_idle.png'),
+  };
+
+  const bowEatImages: Record<string, any> = {
+    ribbon_blue: require('@/assets/images/cat/bluebow_eat.png'),
+    ribbon_brown: require('@/assets/images/cat/brownbow_eat.png'),
+    ribbon_green: require('@/assets/images/cat/greenbow_eat.png'),
+    ribbon_pink: require('@/assets/images/cat/pinkbow_eat.png'),
+    ribbon_purple: require('@/assets/images/cat/purplebow_eat.png'),
+    ribbon_red: require('@/assets/images/cat/redbow_eat.png'),
+    ribbon_white: require('@/assets/images/cat/whitebow_eat.png'),
+    ribbon_yellow: require('@/assets/images/cat/yellowbow_eat.png'),
+  };
+
+  function getCatImage() {
+    const equippedBow = clothing.find(c => c.equipped);
+    const bowId = equippedBow ? equippedBow.id : null;
+
+    if (isEating) {
+      if (bowId && bowEatImages[bowId]) {
+        return bowEatImages[bowId];
+      }
+      return require('@/assets/images/cat/eat.png');
+    }
+
+    if (bowId && bowIdleImages[bowId]) {
+      return bowIdleImages[bowId];
+    }
+    return require('@/assets/images/cat/Idle.png');
+  }
 
   //happiness functions
   function decreaseHappiness(value: number) {
@@ -94,44 +136,57 @@ export default function PetScreen() {
     if (healthGain !== null) {
       increaseHealth(healthGain);
       increaseHappiness(healthGain);
+
+      setIsEating(true);
+
+      if (eatingTimeoutRef.current) {
+        clearTimeout(eatingTimeoutRef.current);
+      }
+      eatingTimeoutRef.current = setTimeout(() => {
+        setIsEating(false);
+      }, 2000);
     }
   }
 
   //handle room changing color logic
   function getRoomImage() {
-  const equippedRoom = rooms.find(r => r.equipped);
-  const roomId = equippedRoom ? equippedRoom.id : "gray";
+    const equippedRoom = rooms.find(r => r.equipped);
+    const roomId = equippedRoom ? equippedRoom.id : "gray";
 
-  switch (roomId) {
-    case "gray":
-      return require('@/assets/images/rooms/grayRoom.png');
-    case "pink":
-      return require('@/assets/images/rooms/pinkRoom.png');
-    case "black":
-      return require('@/assets/images/rooms/blackRoom.png');
-    case "blue":
-      return require('@/assets/images/rooms/blueRoom.png');
-    case "navy":
-      return require('@/assets/images/rooms/navyRoom.png');
-    case "coral":
-      return require('@/assets/images/rooms/coralRoom.png');
-    case "jungle":
-      return require('@/assets/images/rooms/jungleRoom.png');
-    case "darkTan":
-      return require('@/assets/images/rooms/darkTanRoom.png');
-    default:
-      return require('@/assets/images/rooms/grayRoom.png');
+    switch (roomId) {
+      case "gray":
+        return require('@/assets/images/rooms/grayRoom.png');
+      case "pink":
+        return require('@/assets/images/rooms/pinkRoom.png');
+      case "black":
+        return require('@/assets/images/rooms/blackRoom.png');
+      case "blue":
+        return require('@/assets/images/rooms/blueRoom.png');
+      case "navy":
+        return require('@/assets/images/rooms/navyRoom.png');
+      case "coral":
+        return require('@/assets/images/rooms/coralRoom.png');
+      case "jungle":
+        return require('@/assets/images/rooms/jungleRoom.png');
+      case "darkTan":
+        return require('@/assets/images/rooms/darkTanRoom.png');
+      case "purple":
+        return require('@/assets/images/rooms/purpleRoom.png');
+      case "tan":
+        return require('@/assets/images/rooms/tanRoom.png');
+      default:
+        return require('@/assets/images/rooms/grayRoom.png');
+    }
   }
-}
 
-const PANEL_HEIGHT = 150;
+  const PANEL_HEIGHT = 150;
 
   //RENDER ---------------------------
-return (
+  return (
     <View style={{ flex: 1 }}>
-      <View style={{ 
-        position: "absolute", 
-        width: "100%", 
+      <View style={{
+        position: "absolute",
+        width: "100%",
         height: "100%",
         bottom: openPanel ? PANEL_HEIGHT : 0,
       }}>
@@ -141,7 +196,7 @@ return (
           resizeMode="cover"
         />
         <Image
-          source={require('@/assets/images/cat/Idle.png')}
+          source={getCatImage()}
           style={{ position: "absolute", width: 80, height: 80, bottom: 120, left: "50%", marginLeft: -40 }}
         />
       </View>
@@ -154,13 +209,6 @@ return (
           </View>
           <CoinDisplay amount={coinBal} themeColors={themeColors} />
         </View>
-
-        <TextInput
-          value={petName}
-          onChangeText={setPetName}
-          placeholder="What's its name?"
-          style={{ marginVertical: 8, padding: 4, color: themeColors.text }}
-        />
 
         <View style={{ position: "absolute", right: 10, top: "40%" }}>
           <AppButton onPress={() => setOpenPanel(openPanel === "food" ? null : "food")} label="food" themeColors={themeColors} />
@@ -177,25 +225,75 @@ return (
 
         {openPanel && (
           <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 150, backgroundColor: themeColors.background, padding: 10 }}>
-            <AppButton onPress={() => setOpenPanel(null)} label="Close" themeColors={themeColors} />
-            <ScrollView horizontal>
+            <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}>
+              {openPanel === "food" && foodInventory.length === 0 && (
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                  Visit the marketplace to buy food!
+                </Text>
+              )}
               {openPanel === "food" &&
                 foodInventory.map(item => (
-                  <AppButton key={item.id} onPress={() => feedPet(item.id)} label={`${item.name} (${item.quantity})`} themeColors={themeColors} />
+                  <AppButton
+                    key={item.id}
+                    onPress={() => feedPet(item.id)}
+                    label={`${item.name} (${item.quantity})`}
+                    themeColors={themeColors}
+                    variant="square"
+                  />
                 ))}
+
+              {openPanel === "clothing" && clothing.length === 0 && (
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                  Visit the marketplace to buy clothes!
+                </Text>
+              )}
               {openPanel === "clothing" &&
                 clothing.map(hat => (
-                  <AppButton key={hat.id} onPress={() => equipClothing(hat.id)} label={`${hat.name}${hat.equipped ? " (Equipped)" : ""}`} themeColors={themeColors} />
+                  <AppButton
+                    key={hat.id}
+                    onPress={() => equipClothing(hat.id)}
+                    label={hat.name}
+                    active={hat.equipped}
+                    themeColors={themeColors}
+                    variant="square"
+                  />
                 ))}
+
+              {openPanel === "furniture" && furnitureOwned.length === 0 && (
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                  Visit the marketplace to buy furniture!
+                </Text>
+              )}
               {openPanel === "furniture" &&
                 furnitureOwned.map(item => (
-                  <AppButton key={item.id} onPress={() => placeFurniture(item.id)} label={`${item.name}${item.placed ? " (Equipped)" : ""}`} themeColors={themeColors} />
+                  <AppButton
+                    key={item.id}
+                    onPress={() => placeFurniture(item.id)}
+                    label={item.name}
+                    active={item.placed}
+                    themeColors={themeColors}
+                    variant="square"
+                  />
                 ))}
+
+              {openPanel === "room" && rooms.length === 0 && (
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                  Visit the marketplace to buy more rooms!
+                </Text>
+              )}
               {openPanel === "room" &&
                 rooms.map(room => (
-                  <AppButton key={room.id} onPress={() => equipRoom(room.id)} label={`${room.name}${room.equipped ? " (Equipped)" : ""}`} themeColors={themeColors} />
+                  <AppButton
+                    key={room.id}
+                    onPress={() => equipRoom(room.id)}
+                    label={room.name}
+                    active={room.equipped}
+                    themeColors={themeColors}
+                    variant="square"
+                  />
                 ))}
             </ScrollView>
+            <AppButton onPress={() => setOpenPanel(null)} label="Close" fullWidth themeColors={themeColors} />
           </View>
         )}
       </View>

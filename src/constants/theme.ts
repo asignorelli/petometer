@@ -10,6 +10,8 @@ export const RoomPalettes: Record<string, { primary: string; text: string; backg
   coral: { primary: "#E8795A", text: "#5A2A1A", background: "#FFF1EC" },
   jungle: { primary: "#4C7A4C", text: "#1C3A1C", background: "#EAF4E8" },
   darkTan: { primary: "#8A6E4B", text: "#2E2418", background: "#F2E8D8" },
+  purple: { primary: "#7B5EA7", text: "#2E1A47", background: "#F3EEF9" },
+  tan: { primary: "#C9A876", text: "#4A3A22", background: "#F7EFE0" },
 };
 
 export const defaultPalette = RoomPalettes.gray;

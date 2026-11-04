@@ -37,7 +37,7 @@ type FurnitureItem = {
   moodBoost: number;
 };
 
-type RoomItem={
+type RoomItem = {
   id: string;
   name: string;
   type: "room";
@@ -54,10 +54,32 @@ export default function MarketplaceScreen() {
   const themeColors = getThemeColors(rooms);
 
   const shopItems: ShopItem[] = [
-    { id: "apple", name: "Apple", type: "food", cost: 20, healthValue: 10 },
-    { id: "salad", name: "Salad", type: "food", cost: 40, healthValue: 25 },
-    { id: "cool_hat", name: "Cool Hat", type: "clothing", cost: 100, moodBoost: 10 },
-    { id: "blue_chair", name: "Blue Chair", type: "furniture", category: "chair", cost: 80, moodBoost: 5 },
+    { id: "ribbon_blue", name: "Blue Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_brown", name: "Brown Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_green", name: "Green Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_pink", name: "Pink Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_purple", name: "Purple Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_red", name: "Red Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_white", name: "White Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "ribbon_yellow", name: "Yellow Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+    { id: "salmon", name: "Salmon", type: "food", cost: 50, healthValue: 25 },
+    { id: "chicken", name: "Chicken", type: "food", cost: 40, healthValue: 20 },
+    { id: "tuna", name: "Tuna", type: "food", cost: 45, healthValue: 22 },
+    { id: "pumpkin", name: "Pumpkin", type: "food", cost: 25, healthValue: 12 },
+    { id: "egg", name: "Egg", type: "food", cost: 30, healthValue: 15 },
+    { id: "carrot", name: "Carrot", type: "food", cost: 20, healthValue: 10 },
+    { id: "blueberries", name: "Blueberries", type: "food", cost: 35, healthValue: 18 },
+    { id: "spinach", name: "Spinach", type: "food", cost: 22, healthValue: 11 },
+    { id: "sweet_potato", name: "Sweet Potato", type: "food", cost: 28, healthValue: 14 },
+    { id: "chair_blue", name: "Blue Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
+    { id: "chair_red", name: "Red Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
+    { id: "chair_green", name: "Green Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
+    { id: "wall_art_1", name: "Wall Painting", type: "furniture", category: "wall", cost: 150, moodBoost: 12 },
+    { id: "wall_art_2", name: "Wall Clock", type: "furniture", category: "wall", cost: 120, moodBoost: 10 },
+    { id: "wall_art_3", name: "Wall Shelf", type: "furniture", category: "wall", cost: 130, moodBoost: 11 },
+    { id: "toy_ball", name: "Yarn Ball", type: "furniture", category: "toy", cost: 60, moodBoost: 7 },
+    { id: "toy_mouse", name: "Toy Mouse", type: "furniture", category: "toy", cost: 60, moodBoost: 7 },
+    { id: "scratching_post", name: "Scratching Post", type: "furniture", category: "toy", cost: 180, moodBoost: 15 },
     { id: "pink", name: "Pink Room", type: "room", cost: 200 },
     { id: "black", name: "Black Room", type: "room", cost: 200 },
     { id: "blue", name: "Blue Room", type: "room", cost: 200 },
@@ -65,6 +87,8 @@ export default function MarketplaceScreen() {
     { id: "coral", name: "Coral Room", type: "room", cost: 200 },
     { id: "jungle", name: "Jungle Room", type: "room", cost: 200 },
     { id: "darkTan", name: "Dark Tan Room", type: "room", cost: 200 },
+    { id: "purple", name: "Purple Room", type: "room", cost: 200 },
+    { id: "tan", name: "Tan Room", type: "room", cost: 200 },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<"food" | "clothing" | "furniture" | "room">("food");
@@ -78,31 +102,31 @@ export default function MarketplaceScreen() {
   function isBlocked(item: ShopItem): boolean {
 
     //food items max at 99
-    if(item.type === "food"){
-      for(let i=0; i<foodInventory.length; i++){
-        if(foodInventory[i].id === item.id && foodInventory[i].quantity >= 99){
+    if (item.type === "food") {
+      for (let i = 0; i < foodInventory.length; i++) {
+        if (foodInventory[i].id === item.id && foodInventory[i].quantity >= 99) {
           return true;
         }
       }
     }
     //clothing and furniture can only own 1 of each
-    if(item.type==="clothing"){
-      for(let i=0; i<clothing.length; i++){
-        if(clothing[i].id === item.id && clothing[i].owned){
+    if (item.type === "clothing") {
+      for (let i = 0; i < clothing.length; i++) {
+        if (clothing[i].id === item.id && clothing[i].owned) {
           return true;
         }
       }
     }
-    if(item.type==="furniture"){
-      for(let i=0; i<furnitureOwned.length; i++){
-        if(furnitureOwned[i].id === item.id && furnitureOwned[i].owned){
+    if (item.type === "furniture") {
+      for (let i = 0; i < furnitureOwned.length; i++) {
+        if (furnitureOwned[i].id === item.id && furnitureOwned[i].owned) {
           return true;
         }
       }
     }
-    if(item.type==="room"){
-      for(let i=0; i<rooms.length; i++){
-        if(rooms[i].id === item.id && rooms[i].owned){
+    if (item.type === "room") {
+      for (let i = 0; i < rooms.length; i++) {
+        if (rooms[i].id === item.id && rooms[i].owned) {
           return true;
         }
       }
@@ -122,7 +146,7 @@ export default function MarketplaceScreen() {
 
     //check if already owned/maxed out first, if so, break 
     if (isBlocked(item)) {
-      return false; 
+      return false;
     }
     //attempt to buy it
     const success = spendCoins(item.cost);
@@ -145,8 +169,8 @@ export default function MarketplaceScreen() {
     return true;
   }
 
-//RENDER-----------------------------------
-    return (
+  //RENDER-----------------------------------
+  return (
     <View style={[sharedStyles.container, { backgroundColor: themeColors.background }]}>
       <View style={sharedStyles.topRow}>
         <View style={{ flex: 1 }} />

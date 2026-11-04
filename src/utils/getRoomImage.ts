@@ -26,6 +26,10 @@ export function getRoomImage(rooms: Room[]) {
       return require('@/assets/images/rooms/jungleRoom.png');
     case "darkTan":
       return require('@/assets/images/rooms/darkTanRoom.png');
+    case "purple":
+      return require('@/assets/images/rooms/purpleRoom.png');
+    case "tan":
+      return require('@/assets/images/rooms/tanRoom.png');
     default:
       return require('@/assets/images/rooms/grayRoom.png');
   }
