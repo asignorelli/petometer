@@ -54,6 +54,7 @@ export default function MarketplaceScreen() {
   const themeColors = getThemeColors(rooms);
 
   const shopItems: ShopItem[] = [
+    //clothes
     { id: "ribbon_blue", name: "Blue Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
     { id: "ribbon_brown", name: "Brown Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
     { id: "ribbon_green", name: "Green Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
@@ -62,6 +63,8 @@ export default function MarketplaceScreen() {
     { id: "ribbon_red", name: "Red Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
     { id: "ribbon_white", name: "White Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
     { id: "ribbon_yellow", name: "Yellow Ribbon", type: "clothing", cost: 80, moodBoost: 8 },
+  
+    //food
     { id: "salmon", name: "Salmon", type: "food", cost: 50, healthValue: 25 },
     { id: "chicken", name: "Chicken", type: "food", cost: 40, healthValue: 20 },
     { id: "tuna", name: "Tuna", type: "food", cost: 45, healthValue: 22 },
@@ -71,15 +74,19 @@ export default function MarketplaceScreen() {
     { id: "blueberries", name: "Blueberries", type: "food", cost: 35, healthValue: 18 },
     { id: "spinach", name: "Spinach", type: "food", cost: 22, healthValue: 11 },
     { id: "sweet_potato", name: "Sweet Potato", type: "food", cost: 28, healthValue: 14 },
-    { id: "chair_blue", name: "Blue Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
-    { id: "chair_red", name: "Red Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
-    { id: "chair_green", name: "Green Chair", type: "furniture", category: "chair", cost: 100, moodBoost: 10 },
-    { id: "wall_art_1", name: "Wall Painting", type: "furniture", category: "wall", cost: 150, moodBoost: 12 },
-    { id: "wall_art_2", name: "Wall Clock", type: "furniture", category: "wall", cost: 120, moodBoost: 10 },
-    { id: "wall_art_3", name: "Wall Shelf", type: "furniture", category: "wall", cost: 130, moodBoost: 11 },
-    { id: "toy_ball", name: "Yarn Ball", type: "furniture", category: "toy", cost: 60, moodBoost: 7 },
-    { id: "toy_mouse", name: "Toy Mouse", type: "furniture", category: "toy", cost: 60, moodBoost: 7 },
-    { id: "scratching_post", name: "Scratching Post", type: "furniture", category: "toy", cost: 180, moodBoost: 15 },
+
+    //furniture
+    { id: "catbed", name: "Cat Bed", type: "furniture", category: "catbed", cost: 120, moodBoost: 12 },
+    { id: "cathouse", name: "Cat Tower", type: "furniture", category: "cathouse", cost: 200, moodBoost: 18 },
+    { id: "cattree", name: "Cat Tree", type: "furniture", category: "cattree", cost: 220, moodBoost: 20 },
+    { id: "lamp", name: "Lamp", type: "furniture", category: "lamp", cost: 60, moodBoost: 6 },
+    { id: "mousetoy", name: "Mouse Toy", type: "furniture", category: "mousetoy", cost: 40, moodBoost: 5 },
+    { id: "painting", name: "Painting", type: "furniture", category: "painting", cost: 90, moodBoost: 9 },
+    { id: "plant", name: "Plant", type: "furniture", category: "plant", cost: 70, moodBoost: 7 },
+    { id: "scratchpost", name: "Scratch Post", type: "furniture", category: "scratchpost", cost: 110, moodBoost: 11 },
+    { id: "window", name: "Window", type: "furniture", category: "window", cost: 80, moodBoost: 8 },
+   
+    //rooms
     { id: "pink", name: "Pink Room", type: "room", cost: 200 },
     { id: "black", name: "Black Room", type: "room", cost: 200 },
     { id: "blue", name: "Blue Room", type: "room", cost: 200 },

@@ -5,5 +5,5 @@ import { Text } from "react-native";
 type ThemeColors = { text: string };
 
 export default function CoinDisplay({ amount, themeColors }: { amount: number; themeColors: ThemeColors }) {
-  return <Text style={{ fontSize: 16, color: themeColors.text }}>🪙 {amount}</Text>;
+  return <Text style={{ fontSize: 24, color: themeColors.text, fontFamily:"Pixgamer" }}>Coins: {amount}</Text>;
 }

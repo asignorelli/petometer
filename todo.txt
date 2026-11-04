@@ -1,0 +1,53 @@
+for assets
+
+and make the coins go 99,999... to not break the layout
+
+also need assets for
+
+DEMO BUTTONS CAN STAY THE SAME AS THEY ARE, JUST MAKE THEM GRAY AND SMALLERISH
+
+STEP TAB
+coin box (just a coin logo with like a transparent gray/black box for the text)
+buttons for 
+-collect coins
+-daily goals
+
+-little settings logo to go by the streak goal, which will bring up the buttons
+-little flame logo to go by the actual streak at the top
+-coin logo + box
+-step goal box (should show up when u click the goal)
+
+PET TAB
+-health bar transparent for the red box in the bg
+-happiness bar transparent for yellow box in bg
+-food button 
+-clothing button
+-furniture button
+-room button 
+
+
+-food inventory images
+-furniture inventory images
+
+-add 9 furnitures to rooms
+-add images as the inventory buttons
+-images for room buttons
+-images for clothing (isolate the bows)
+
+MARKETPLACE TAB
+-3 assets for marketplace body
+-one for tab 1 clicked
+-one for tab 2 clicked
+-one for tab 3 clicked
+one for tab 4 clicked
+-coin asset to go next to price
+
+
+then
+make step tab center designed
+fix any formatting
+-work on health decay/happiness decay
+-real step counting?
+-real streak counting?
+-animations? lol
+-sound effects?

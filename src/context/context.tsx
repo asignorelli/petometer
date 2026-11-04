@@ -28,6 +28,7 @@ type GameContextValue = {
   placeFurniture: (id: string) => void;
   rooms: Room[];
   buyRoom: (id: string, name: string) => void;
+  equipRoom: (id: string) => void;
 };
 
 //define food type
@@ -82,6 +83,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setFoodInventory([]);
     setClothing([]);
     setFurnitureOwned([]);
+    setRooms([]);
   }
 
   //coin functions

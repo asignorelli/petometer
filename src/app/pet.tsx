@@ -83,6 +83,11 @@ export default function PetScreen() {
     return require('@/assets/images/cat/Idle.png');
   }
 
+  //for furniture items
+  function isPlaced(id: string): boolean {
+    return furnitureOwned.some(f => f.id === id && f.placed);
+  }
+
   //happiness functions
   function decreaseHappiness(value: number) {
     setPetHappiness(prevHappiness => Math.max(prevHappiness - value, 0));
@@ -195,9 +200,41 @@ export default function PetScreen() {
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
         />
+        {isPlaced("catbed") && (
+          <Image source={require('@/assets/images/furniture/catbed.png')} style={{ position: "absolute", width: 110, height: 110, bottom: 20, left: 20 }} resizeMode="contain" />
+        )}
+        {isPlaced("cathouse") && (
+          <Image source={require('@/assets/images/furniture/cathouse.png')} style={{ position: "absolute", width: 150, height: 300, bottom: 50, left: "6%"}} resizeMode="contain" />
+        )}
+        {isPlaced("cattree") && (
+          <Image source={require('@/assets/images/furniture/cattree.png')} style={{ position: "absolute", width: 150, height: 250, bottom: 100, left: "60%" }} resizeMode="contain" />
+        )}
+        {isPlaced("lamp") && (
+          <Image source={require('@/assets/images/furniture/lamp.png')} style={{ position: "absolute", width: 80, height: 80, top: 30, left: "40%" }} resizeMode="contain" />
+        )}
+        {isPlaced("mousetoy") && (
+          <Image source={require('@/assets/images/furniture/mousetoy.png')} style={{ position: "absolute", width: 40, height: 40, bottom: 25, left: 115 }} resizeMode="contain" />
+        )}
+        {isPlaced("painting") && (
+          <Image source={require('@/assets/images/furniture/painting.png')} style={{ position: "absolute", width: 70, height: 70, top: 170, left: "90%", marginLeft: -20 }} resizeMode="contain" />
+        )}
+        {isPlaced("plant") && (
+          <Image source={require('@/assets/images/furniture/plant.png')} style={{ position: "absolute", width: 145, height: 145, bottom: 85, left:"75%" }} resizeMode="contain" />
+        )}
+        {isPlaced("scratchpost") && (
+          <Image source={require('@/assets/images/furniture/scratchpost.png')} style={{ position: "absolute", width: 70, height: 70, bottom: 25, left: 225 }} resizeMode="contain" />
+        )}
+        {isPlaced("window") && (
+          <Image source={require('@/assets/images/furniture/window.png')} style={{ position: "absolute", width: 120, height: 120, top: 190, left: "35%" }} resizeMode="contain" />
+        )}
         <Image
           source={getCatImage()}
-          style={{ position: "absolute", width: 80, height: 80, bottom: 120, left: "50%", marginLeft: -40 }}
+          style={
+            isEating
+              ? { position: "absolute", width: 80, height: 100, bottom: 85, left: "54%", marginLeft: -50 }
+              : { position: "absolute", width: 80, height: 100, bottom: 90, left: "54%", marginLeft: -50 }
+          }
+          resizeMode="contain"
         />
       </View>
 
@@ -210,7 +247,7 @@ export default function PetScreen() {
           <CoinDisplay amount={coinBal} themeColors={themeColors} />
         </View>
 
-        <View style={{ position: "absolute", right: 10, top: "40%" }}>
+        <View style={{ position: "absolute", left:0, top: "20%" }}>
           <AppButton onPress={() => setOpenPanel(openPanel === "food" ? null : "food")} label="food" themeColors={themeColors} />
           <AppButton onPress={() => setOpenPanel(openPanel === "clothing" ? null : "clothing")} label="clothing" themeColors={themeColors} />
           <AppButton onPress={() => setOpenPanel(openPanel === "furniture" ? null : "furniture")} label="furniture" themeColors={themeColors} />
