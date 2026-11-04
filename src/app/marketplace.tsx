@@ -2,6 +2,7 @@ import AppButton from "@/components/AppButton";
 import CoinDisplay from "@/components/CoinDisplay";
 import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
+import { getThemeColors } from "@/utils/getThemeColors";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -36,21 +37,37 @@ type FurnitureItem = {
   moodBoost: number;
 };
 
-type ShopItem = FoodItem | ClothingItem | FurnitureItem;
+type RoomItem={
+  id: string;
+  name: string;
+  type: "room";
+  cost: number;
+}
+
+type ShopItem = FoodItem | ClothingItem | FurnitureItem | RoomItem;
 
 export default function MarketplaceScreen() {
 
   //VARIABLES----------------------
-  const { spendCoins, addFood, buyClothing, buyFurniture, coinBal, clothing, furnitureOwned, foodInventory } = useGame();
+  const { spendCoins, addFood, buyClothing, buyFurniture, buyRoom,
+    coinBal, clothing, furnitureOwned, foodInventory, rooms } = useGame();
+  const themeColors = getThemeColors(rooms);
 
   const shopItems: ShopItem[] = [
     { id: "apple", name: "Apple", type: "food", cost: 20, healthValue: 10 },
     { id: "salad", name: "Salad", type: "food", cost: 40, healthValue: 25 },
     { id: "cool_hat", name: "Cool Hat", type: "clothing", cost: 100, moodBoost: 10 },
     { id: "blue_chair", name: "Blue Chair", type: "furniture", category: "chair", cost: 80, moodBoost: 5 },
+    { id: "pink", name: "Pink Room", type: "room", cost: 200 },
+    { id: "black", name: "Black Room", type: "room", cost: 200 },
+    { id: "blue", name: "Blue Room", type: "room", cost: 200 },
+    { id: "navy", name: "Navy Room", type: "room", cost: 200 },
+    { id: "coral", name: "Coral Room", type: "room", cost: 200 },
+    { id: "jungle", name: "Jungle Room", type: "room", cost: 200 },
+    { id: "darkTan", name: "Dark Tan Room", type: "room", cost: 200 },
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState<"food" | "clothing" | "furniture">("food");
+  const [selectedCategory, setSelectedCategory] = useState<"food" | "clothing" | "furniture" | "room">("food");
 
   const filteredItems = shopItems.filter(item => item.type === selectedCategory);
 
@@ -79,6 +96,13 @@ export default function MarketplaceScreen() {
     if(item.type==="furniture"){
       for(let i=0; i<furnitureOwned.length; i++){
         if(furnitureOwned[i].id === item.id && furnitureOwned[i].owned){
+          return true;
+        }
+      }
+    }
+    if(item.type==="room"){
+      for(let i=0; i<rooms.length; i++){
+        if(rooms[i].id === item.id && rooms[i].owned){
           return true;
         }
       }
@@ -115,29 +139,38 @@ export default function MarketplaceScreen() {
     else if (item.type === "furniture") {
       buyFurniture(item.id, item.name, item.category, item.moodBoost);
     }
+    else if (item.type === "room") {
+      buyRoom(item.id, item.name);
+    }
     return true;
   }
 
 //RENDER-----------------------------------
-  return (
-    <View style={sharedStyles.container}>
+    return (
+    <View style={[sharedStyles.container, { backgroundColor: themeColors.background }]}>
       <View style={sharedStyles.topRow}>
         <View style={{ flex: 1 }} />
-        <CoinDisplay amount={coinBal} />
+        <CoinDisplay amount={coinBal} themeColors={themeColors} />
       </View>
 
-      <View style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 8 }}>
-        <AppButton onPress={() => setSelectedCategory("food")} label="Food" />
-        <AppButton onPress={() => setSelectedCategory("clothing")} label="Clothing" />
-        <AppButton onPress={() => setSelectedCategory("furniture")} label="Furniture" />
+      <View style={{ flexDirection: "row", justifyContent: "space-around", marginVertical: 8, flexWrap: "wrap" }}>
+        <AppButton onPress={() => setSelectedCategory("food")} label="Food" themeColors={themeColors} />
+        <AppButton onPress={() => setSelectedCategory("clothing")} label="Clothing" themeColors={themeColors} />
+        <AppButton onPress={() => setSelectedCategory("furniture")} label="Furniture" themeColors={themeColors} />
+        <AppButton onPress={() => setSelectedCategory("room")} label="Rooms" themeColors={themeColors} />
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
         {filteredItems.map(item => {
-          const owned = isBlocked(item);
+          const blocked = isBlocked(item);
           return (
             <View key={item.id} style={{ width: "30%", marginBottom: 10 }}>
-              <AppButton onPress={() => buyItem(item.id)} label={owned ? "SOLD" : `${item.name}\n${item.cost}`} disabled={owned} />
+              <AppButton
+                onPress={() => buyItem(item.id)}
+                label={blocked ? "SOLD" : `${item.name}\n${item.cost}`}
+                disabled={blocked}
+                themeColors={themeColors}
+              />
             </View>
           );
         })}

@@ -1,7 +1,21 @@
 import { GameProvider } from "@/context/context";
+import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
+import { ActivityIndicator } from "react-native";
 
 export default function RootLayout() {
+
+  const [fontsLoaded] = useFonts({
+    "Ithaca": require("C:\\Users\\alyss\\petometer\\assets\\fonts\\Ithaca.ttf"),
+    "Pixgamer": require("C:\\Users\\alyss\\petometer\\assets\\fonts\\Pixgamer.ttf"),
+    "Virtupet": require("C:\\Users\\alyss\\petometer\\assets\\fonts\\Virtupet.ttf")
+  });
+
+  //loading if font no load
+  if (!fontsLoaded) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <GameProvider>
       <Tabs>

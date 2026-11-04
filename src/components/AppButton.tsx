@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/theme";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 
@@ -6,31 +5,34 @@ import { Pressable, StyleSheet, Text } from "react-native";
 //buttons are much prettier than pressable text
 //may be irrelevant once assets are found or good for skeleton code
 
-//makes them pressable
+type ThemeColors = { primary: string; text: string };
+
 type AppButtonProps = {
   onPress: () => void;
   label: string;
   disabled?: boolean;
+  themeColors: ThemeColors;
 };
 
-//used for the button styling
-export default function AppButton({ onPress, label, disabled }: AppButtonProps) {
+export default function AppButton({ onPress, label, disabled, themeColors }: AppButtonProps) {
   return (
-    <Pressable onPress={onPress} disabled={disabled} style={[styles.button, disabled && styles.buttonDisabled]}>
-      <Text style={styles.buttonText}>{label}</Text>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={[styles.button, { backgroundColor: disabled ? "#999" : themeColors.primary }]}
+    >
+      <Text style={[styles.buttonText, { color: "white" }]}>{label}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.primary,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 10,
     marginVertical: 4,
     alignItems: "center",
   },
-  buttonDisabled: { backgroundColor: "#999" },
-  buttonText: { color: "white", fontSize: 14 },
+  buttonText: { fontSize: 14, fontWeight: "600" },
 });

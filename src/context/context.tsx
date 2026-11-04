@@ -26,6 +26,8 @@ type GameContextValue = {
   furnitureOwned: Furniture[];
   buyFurniture: (id: string, name: string, category: string, moodBoost: number) => void;
   placeFurniture: (id: string) => void;
+  rooms: Room[];
+  buyRoom: (id: string, name: string) => void;
 };
 
 //define food type
@@ -53,6 +55,13 @@ type Furniture = {
   moodBoost: number;
   owned: boolean;
   placed: boolean;
+};
+
+type Room ={
+  id: string;
+  name: string;
+  owned: boolean;
+  equipped: boolean;
 };
 
 //create the gamecontext for my other tabs to use
@@ -234,6 +243,48 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setFurnitureOwned(newFurniture);
   }
 
+  //ROOM LOGIC ---------------------
+  //define the default room you start with
+  const [rooms, setRooms] = useState<Room[]>([
+    {id: "gray", name: "Gray Room", owned:true, equipped: true}
+  ]);
+
+  function buyRoom(id: string, name: string) {
+    setRooms(prev => {
+      const newRooms = [...prev];
+      let found = false;
+
+      //check if room is owned
+      for (let i = 0; i < newRooms.length; i++) {
+        if (newRooms[i].id === id) {
+          newRooms[i].owned = true;
+          found = true;
+          break;
+        }
+      }
+      //if not found, add new room
+      if (!found) {
+        newRooms.push({ id, name, owned: true, equipped: false });
+      }
+      return newRooms;
+    });
+  }
+
+  //equip the new room
+  function equipRoom(id: string) {
+    setRooms(prev => {
+      const newRooms = [...prev];
+      for (let i = 0; i < newRooms.length; i++) {
+        if (newRooms[i].id === id) {
+          newRooms[i].equipped = true;
+        } else {
+          newRooms[i].equipped = false;
+        }
+      }
+      return newRooms;
+    });
+  }
+
   //context value that will be provided to the rest of the app
   const value = {
     coinBal,
@@ -250,6 +301,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     furnitureOwned,
     buyFurniture,
     placeFurniture,
+    rooms,
+    buyRoom,
+    equipRoom,
   };
 
   //provides the context to the rest of the app

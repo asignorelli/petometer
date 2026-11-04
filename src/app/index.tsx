@@ -2,6 +2,7 @@ import AppButton from "@/components/AppButton";
 import CoinDisplay from "@/components/CoinDisplay";
 import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
+import { getThemeColors } from "@/utils/getThemeColors";
 import { useState } from "react";
 import { Text, View } from "react-native";
 //
@@ -22,8 +23,8 @@ export default function StepsScreen() {
 
   //coin logic
   const [stepBank, setStepBank] = useState(0);
-  const { coinBal, addCoins, resetCoinBalance } = useGame();
-
+  const { coinBal, addCoins, resetCoinBalance, rooms } = useGame();
+  const themeColors = getThemeColors(rooms);
   //extra goals booleans
   const [hasDrankWater, setHasDrankWater] = useState(false);
   const [hasExercised, setHasExercised] = useState(false);
@@ -132,32 +133,34 @@ export default function StepsScreen() {
     //new and improved temp style sheet that will change when I find assets
     //basically just for the demo so its not an ugly list of text
     return (
-      <View style={sharedStyles.container}>
+    <View style={[sharedStyles.container, { backgroundColor: themeColors.background }]}>
       <View style={sharedStyles.topRow}>
         <View style={{ flex: 1 }} />
-        <Text>Streak: {streakCount}</Text>
-        <CoinDisplay amount={coinBal} />
+        <Text style={[sharedStyles.topRightItem, { color: themeColors.text, transform: [{ translateX: -110 }] }]}>
+          Streak: {streakCount}
+        </Text>
+        <CoinDisplay amount={coinBal} themeColors={themeColors} />
       </View>
 
-      <Text style={sharedStyles.bigNumber}>{steps}</Text>
-      <Text style={sharedStyles.subText}>{percentage.toFixed(0)}% of {stepGoal}</Text>
-      
-        <Text style={sharedStyles.cardLabel}>Bank: {stepBank/10}</Text>
-        <AppButton onPress={collectCoins} label="Collect Coins" />
+      <Text style={[sharedStyles.bigNumber, { color: themeColors.text }]}>{steps}</Text>
+      <Text style={[sharedStyles.subText, { color: themeColors.text }]}>{percentage.toFixed(0)}% of {stepGoal}</Text>
 
-        <Text style={sharedStyles.cardLabel}>Daily Goals</Text>
-        <AppButton onPress={drinkWater} label={hasDrankWater ? "DONE" : "Drink Water"} />
-        <AppButton onPress={exercise} label={hasExercised ? "DONE" : "Exercise"} />
-        <AppButton onPress={sleep} label={hasSleptHours ? "DONE" : "Sleep"} />
-     
-        <Text style={sharedStyles.cardLabel}>Step Goal</Text>
-        <AppButton onPress={increaseGoal} label="Increase Goal" />
-        <AppButton onPress={decreaseGoal} label="Decrease Goal" />
-  
+      <Text style={[sharedStyles.cardLabel, { color: themeColors.text }]}>Bank: {stepBank / 10}</Text>
+      <AppButton onPress={collectCoins} label="Collect Coins" themeColors={themeColors} />
+
+      <Text style={[sharedStyles.cardLabel, { color: themeColors.text }]}>Daily Goals</Text>
+      <AppButton onPress={drinkWater} label={hasDrankWater ? "DONE" : "Drink Water"} themeColors={themeColors} />
+      <AppButton onPress={exercise} label={hasExercised ? "DONE" : "Exercise"} themeColors={themeColors} />
+      <AppButton onPress={sleep} label={hasSleptHours ? "DONE" : "Sleep"} themeColors={themeColors} />
+
+      <Text style={[sharedStyles.cardLabel, { color: themeColors.text }]}>Step Goal</Text>
+      <AppButton onPress={increaseGoal} label="Increase Goal" themeColors={themeColors} />
+      <AppButton onPress={decreaseGoal} label="Decrease Goal" themeColors={themeColors} />
+
       <View style={sharedStyles.demoCorner}>
-        <AppButton onPress={addSteps} label="Add 500 Steps" />
-        <AppButton onPress={resetSteps} label="Reset" />
-        <AppButton onPress={simulateDay} label="New Day" />
+        <AppButton onPress={addSteps} label="Add 500 Steps" themeColors={themeColors} />
+        <AppButton onPress={resetSteps} label="Reset" themeColors={themeColors} />
+        <AppButton onPress={simulateDay} label="New Day" themeColors={themeColors} />
       </View>
     </View>
   );
