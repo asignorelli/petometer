@@ -74,7 +74,7 @@ export default function MarketplaceScreen() {
     { id: "ribbon_pink", name: "Pink Bow", type: "clothing", cost: 80, moodBoost: 8, icon: require('@/assets/images/clothing/pinkbow.png') },
     { id: "ribbon_white", name: "White Bow", type: "clothing", cost: 80, moodBoost: 8, icon: require('@/assets/images/clothing/whitebow.png') },
     { id: "ribbon_brown", name: "Brown Bow", type: "clothing", cost: 80, moodBoost: 8, icon: require('@/assets/images/clothing/brownbow.png') },
-   
+
     //food
     { id: "salmon", name: "Salmon", type: "food", cost: 50, healthValue: 25, icon: require('@/assets/images/food/salmon.png') },
     { id: "chicken", name: "Chicken", type: "food", cost: 40, healthValue: 20, icon: require('@/assets/images/food/chicken.png') },
@@ -96,16 +96,17 @@ export default function MarketplaceScreen() {
     { id: "plant", name: "Plant", type: "furniture", category: "plant", cost: 70, moodBoost: 7, icon: require('@/assets/images/furniture/plant.png') },
     { id: "scratchpost", name: "Scratch Post", type: "furniture", category: "scratchpost", cost: 110, moodBoost: 11, icon: require('@/assets/images/furniture/scratchpost.png') },
     { id: "window", name: "Window", type: "furniture", category: "window", cost: 80, moodBoost: 8, icon: require('@/assets/images/furniture/window.png') },
+    
     //rooms
-{ id: "coral", name: "Coral Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/coralRoom.png') },
-{ id: "tan", name: "Tan Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/tanRoom.png') },
-{ id: "darkTan", name: "Dark Tan Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/darkTanRoom.png') },
-{ id: "jungle", name: "Jungle Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/jungleRoom.png') },
-{ id: "blue", name: "Blue Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/blueRoom.png') },
-{ id: "navy", name: "Navy Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/navyRoom.png') },
-{ id: "purple", name: "Purple Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/purpleRoom.png') },
-{ id: "pink", name: "Pink Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/pinkRoom.png') },
-{ id: "black", name: "Black Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/blackRoom.png') },
+    { id: "coral", name: "Coral Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/coralRoom.png') },
+    { id: "tan", name: "Tan Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/tanRoom.png') },
+    { id: "darkTan", name: "Dark Tan Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/darkTanRoom.png') },
+    { id: "jungle", name: "Jungle Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/jungleRoom.png') },
+    { id: "blue", name: "Blue Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/blueRoom.png') },
+    { id: "navy", name: "Navy Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/navyRoom.png') },
+    { id: "purple", name: "Purple Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/purpleRoom.png') },
+    { id: "pink", name: "Pink Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/pinkRoom.png') },
+    { id: "black", name: "Black Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/blackRoom.png') },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<"food" | "clothing" | "furniture" | "room">("food");
@@ -172,16 +173,16 @@ export default function MarketplaceScreen() {
     }
     //add to inventory based on type
     if (item.type === "food") {
-      addFood(item.id, item.name, item.healthValue);
+      addFood(item.id, item.name, item.healthValue, item.icon);
     }
     else if (item.type === "clothing") {
-      buyClothing(item.id, item.name, item.moodBoost);
+      buyClothing(item.id, item.name, item.moodBoost, item.icon);
     }
     else if (item.type === "furniture") {
-      buyFurniture(item.id, item.name, item.category, item.moodBoost);
+      buyFurniture(item.id, item.name, item.category, item.moodBoost, item.icon);
     }
     else if (item.type === "room") {
-      buyRoom(item.id, item.name);
+      buyRoom(item.id, item.name, item.icon);
     }
     return true;
   }

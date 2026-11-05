@@ -1,5 +1,6 @@
 import AppButton from "@/components/AppButton";
 import CoinDisplay from "@/components/CoinDisplay";
+import InventoryItemCard from "@/components/InventoryItemCard";
 import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { getThemeColors } from "@/utils/getThemeColors";
@@ -204,7 +205,7 @@ export default function PetScreen() {
           <Image source={require('@/assets/images/furniture/catbed.png')} style={{ position: "absolute", width: 110, height: 110, bottom: 20, left: 20 }} resizeMode="contain" />
         )}
         {isPlaced("cathouse") && (
-          <Image source={require('@/assets/images/furniture/cathouse.png')} style={{ position: "absolute", width: 150, height: 300, bottom: 50, left: "6%"}} resizeMode="contain" />
+          <Image source={require('@/assets/images/furniture/cathouse.png')} style={{ position: "absolute", width: 150, height: 300, bottom: 50, left: "6%" }} resizeMode="contain" />
         )}
         {isPlaced("cattree") && (
           <Image source={require('@/assets/images/furniture/cattree.png')} style={{ position: "absolute", width: 150, height: 250, bottom: 100, left: "60%" }} resizeMode="contain" />
@@ -219,7 +220,7 @@ export default function PetScreen() {
           <Image source={require('@/assets/images/furniture/painting.png')} style={{ position: "absolute", width: 70, height: 70, top: 170, left: "90%", marginLeft: -20 }} resizeMode="contain" />
         )}
         {isPlaced("plant") && (
-          <Image source={require('@/assets/images/furniture/plant.png')} style={{ position: "absolute", width: 145, height: 145, bottom: 85, left:"75%" }} resizeMode="contain" />
+          <Image source={require('@/assets/images/furniture/plant.png')} style={{ position: "absolute", width: 145, height: 145, bottom: 85, left: "75%" }} resizeMode="contain" />
         )}
         {isPlaced("scratchpost") && (
           <Image source={require('@/assets/images/furniture/scratchpost.png')} style={{ position: "absolute", width: 70, height: 70, bottom: 25, left: 225 }} resizeMode="contain" />
@@ -247,7 +248,7 @@ export default function PetScreen() {
           <CoinDisplay amount={coinBal} themeColors={themeColors} />
         </View>
 
-        <View style={{ position: "absolute", left:0, top: "20%" }}>
+        <View style={{ position: "absolute", left: 0, top: "20%" }}>
           <AppButton onPress={() => setOpenPanel(openPanel === "food" ? null : "food")} label="food" themeColors={themeColors} />
           <AppButton onPress={() => setOpenPanel(openPanel === "clothing" ? null : "clothing")} label="clothing" themeColors={themeColors} />
           <AppButton onPress={() => setOpenPanel(openPanel === "furniture" ? null : "furniture")} label="furniture" themeColors={themeColors} />
@@ -255,78 +256,80 @@ export default function PetScreen() {
         </View>
 
         <View style={sharedStyles.demoCorner}>
-          <AppButton onPress={() => decreaseHealth(50)} label="Decay HP" themeColors={themeColors} />
-          <AppButton onPress={() => decreaseHappiness(50)} label="Decay Mood" themeColors={themeColors} />
-          <AppButton onPress={resetInventory} label="Reset Inventory" themeColors={themeColors} />
+          <AppButton onPress={() => decreaseHealth(50)} label="Decay HP" themeColors={themeColors} small transparent />
+          <AppButton onPress={() => decreaseHappiness(50)} label="Decay Mood" themeColors={themeColors} small transparent />
+          <AppButton onPress={resetInventory} label="Reset Inventory" themeColors={themeColors} small transparent />
         </View>
 
         {openPanel && (
           <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 150, backgroundColor: themeColors.background, padding: 10 }}>
             <ScrollView horizontal contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center" }}>
-              {openPanel === "food" && foodInventory.length === 0 && (
-                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+              {openPanel === "food" && foodInventory.filter(item => item.quantity > 0).length === 0 && (
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 20, paddingHorizontal: 20, fontFamily: "Pixgamer" }}>
                   Visit the marketplace to buy food!
                 </Text>
               )}
               {openPanel === "food" &&
-                foodInventory.map(item => (
-                  <AppButton
-                    key={item.id}
-                    onPress={() => feedPet(item.id)}
-                    label={`${item.name} (${item.quantity})`}
-                    themeColors={themeColors}
-                    variant="square"
-                  />
-                ))}
+                foodInventory
+                  .filter(item => item.quantity > 0)
+                  .map(item => (
+                    <InventoryItemCard
+                      key={item.id}
+                      name={item.name}
+                      quantity={item.quantity}
+                      icon={item.icon}
+                      onPress={() => feedPet(item.id)}
+                      themeColors={themeColors}
+                    />
+                  ))}
 
               {openPanel === "clothing" && clothing.length === 0 && (
-                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 20, paddingHorizontal: 20, fontFamily: "Pixgamer" }}>
                   Visit the marketplace to buy clothes!
                 </Text>
               )}
               {openPanel === "clothing" &&
                 clothing.map(hat => (
-                  <AppButton
+                  <InventoryItemCard
                     key={hat.id}
-                    onPress={() => equipClothing(hat.id)}
-                    label={hat.name}
+                    name={hat.name}
+                    icon={hat.icon}
                     active={hat.equipped}
+                    onPress={() => equipClothing(hat.id)}
                     themeColors={themeColors}
-                    variant="square"
                   />
                 ))}
 
               {openPanel === "furniture" && furnitureOwned.length === 0 && (
-                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 20, paddingHorizontal: 20, fontFamily: "Pixgamer" }}>
                   Visit the marketplace to buy furniture!
                 </Text>
               )}
               {openPanel === "furniture" &&
                 furnitureOwned.map(item => (
-                  <AppButton
+                  <InventoryItemCard
                     key={item.id}
-                    onPress={() => placeFurniture(item.id)}
-                    label={item.name}
+                    name={item.name}
+                    icon={item.icon}
                     active={item.placed}
+                    onPress={() => placeFurniture(item.id)}
                     themeColors={themeColors}
-                    variant="square"
                   />
                 ))}
-
               {openPanel === "room" && rooms.length === 0 && (
-                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 14, paddingHorizontal: 20 }}>
+                <Text style={{ color: themeColors.text, textAlign: "center", fontSize: 17, paddingHorizontal: 20, fontFamily: "Pixgamer" }}>
                   Visit the marketplace to buy more rooms!
                 </Text>
               )}
               {openPanel === "room" &&
                 rooms.map(room => (
-                  <AppButton
+                  <InventoryItemCard
                     key={room.id}
-                    onPress={() => equipRoom(room.id)}
-                    label={room.name}
+                    name={room.name}
+                    icon={room.icon}
                     active={room.equipped}
+                    onPress={() => equipRoom(room.id)}
                     themeColors={themeColors}
-                    variant="square"
                   />
                 ))}
             </ScrollView>

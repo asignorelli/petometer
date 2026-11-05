@@ -158,9 +158,9 @@ export default function StepsScreen() {
       <AppButton onPress={decreaseGoal} label="Decrease Goal" themeColors={themeColors} />
 
       <View style={sharedStyles.demoCorner}>
-        <AppButton onPress={addSteps} label="Add 500 Steps" themeColors={themeColors} />
-        <AppButton onPress={resetSteps} label="Reset" themeColors={themeColors} />
-        <AppButton onPress={simulateDay} label="New Day" themeColors={themeColors} />
+        <AppButton onPress={addSteps} label="Add 500 Steps" themeColors={themeColors} small transparent />
+        <AppButton onPress={resetSteps} label="Reset" themeColors={themeColors} small transparent />
+        <AppButton onPress={simulateDay} label="New Day" themeColors={themeColors} small transparent />
       </View>
     </View>
   );

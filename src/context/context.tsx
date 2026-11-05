@@ -14,21 +14,21 @@ import { createContext, useContext, useState } from "react";
 type GameContextValue = {
   coinBal: number;
   foodInventory: Food[];
-  addFood: (foodId: string, name: string, healthValue: number) => void;
   eatFood: (foodId: string) => number | null;
   addCoins: (amount: number) => void;
   resetCoinBalance: () => void;
   resetInventory: () => void;
   spendCoins: (amount: number) => boolean;
-  buyClothing: (id: string, name: string, moodBoost: number) => void;
   equipClothing: (id: string) => void;
   clothing: Clothing[];
   furnitureOwned: Furniture[];
-  buyFurniture: (id: string, name: string, category: string, moodBoost: number) => void;
   placeFurniture: (id: string) => void;
   rooms: Room[];
-  buyRoom: (id: string, name: string) => void;
   equipRoom: (id: string) => void;
+  addFood: (foodId: string, name: string, healthValue: number, icon?: any) => void;
+  buyClothing: (id: string, name: string, moodBoost: number, icon?: any) => void;
+  buyFurniture: (id: string, name: string, category: string, moodBoost: number, icon?: any) => void;
+  buyRoom: (id: string, name: string, icon?: any) => void;
 };
 
 //define food type
@@ -37,6 +37,7 @@ type Food = {
   name: string;
   healthValue: number;
   quantity: number;
+  icon?: any;
 };
 
 //define clothing (aka just hats) type
@@ -46,6 +47,7 @@ type Clothing = {
   owned: boolean;
   equipped: boolean;
   moodBoost: number;
+  icon?: any;
 };
 
 //define furniture types
@@ -56,13 +58,15 @@ type Furniture = {
   moodBoost: number;
   owned: boolean;
   placed: boolean;
+  icon?: any;
 };
 
-type Room ={
+type Room = {
   id: string;
   name: string;
   owned: boolean;
   equipped: boolean;
+  icon?: any;
 };
 
 //create the gamecontext for my other tabs to use
@@ -75,6 +79,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [clothing, setClothing] = useState<Clothing[]>([]);
   const [furnitureOwned, setFurnitureOwned] = useState<Furniture[]>([]);
 
+  //ROOM LOGIC ---------------------
+  //define the default room you start with
+  const [rooms, setRooms] = useState<Room[]>([
+    { id: "gray", name: "Gray Room", owned: true, equipped: true, icon: require('@/assets/images/rooms/grayRoom.png') }
+  ]);
+
   //reset functions for demo
   function resetCoinBalance() {
     setCoinBal(0);
@@ -83,7 +93,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setFoodInventory([]);
     setClothing([]);
     setFurnitureOwned([]);
-    setRooms([]);
+    setRooms([{ id: "gray", name: "Gray Room", owned: true, equipped: true, icon: require('@/assets/images/rooms/grayRoom.png') }]);
   }
 
   //coin functions
@@ -104,7 +114,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }
 
   //FOOD AND EATING LOGIC -----------------
-  function addFood(foodId: string, name: string, healthValue: number) {
+  function addFood(foodId: string, name: string, healthValue: number, icon?: any) {
     // 1. make a copy of foodInventory (const newInventory = [...foodInventory])
     // 2. loop through newInventory with a for loop
     // 3. if you find an item where item.id === foodId, increase its quantity by 1, set found = true
@@ -113,9 +123,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setFoodInventory(prev => {
       const newInventory = [...prev];
       let found = false;
-
-      //check if the food item already exists in the inventory
-      //if yes, add to quantity
       for (let i = 0; i < newInventory.length; i++) {
         if (newInventory[i].id === foodId) {
           newInventory[i].quantity += 1;
@@ -123,17 +130,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           break;
         }
       }
-      //otherwise, make new food in inventory
       if (!found) {
-        newInventory.push({ id: foodId, name, healthValue, quantity: 1 });
+        newInventory.push({ id: foodId, name, healthValue, quantity: 1, icon });
       }
-      return (newInventory);
+      return newInventory;
     });
   }
 
   //eats the food based off the id, return health value if there is one
   function eatFood(foodId: string) {
-
     const newInventory = [...foodInventory];
     for (let i = 0; i < newInventory.length; i++) {
       if (newInventory[i].id === foodId) {
@@ -150,54 +155,48 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   //CLOTHING LOGIC ---------------------
   //handles buying and equipping hats for the pet
-  function buyClothing(id: string, name: string, moodBoost: number) {
+  function buyClothing(id: string, name: string, moodBoost: number, icon?: any) {
     setClothing(prev => {
       const newClothing = [...prev];
-    let found = false;
-
-    //check if hat is owned
-    for (let i = 0; i < newClothing.length; i++) {
-      if (newClothing[i].id === id) {
-        newClothing[i].owned = true;
-        found = true;
-        break;
+      let found = false;
+      for (let i = 0; i < newClothing.length; i++) {
+        if (newClothing[i].id === id) {
+          newClothing[i].owned = true;
+          found = true;
+          break;
+        }
       }
-    }
-    //if not found, add new clothing item
-    if (!found) {
-      newClothing.push({ id, name, owned: true, equipped: false, moodBoost });
-    }
+      if (!found) {
+        newClothing.push({ id, name, owned: true, equipped: false, moodBoost, icon });
+      }
       return newClothing;
     });
   }
 
   //ensures only one hat can be equipped at a time, and handles unequip
   function equipClothing(id: string) {
-    setClothing(prev=> {
-    const newClothing = [...prev];
-
-    //loop through clothing to equip/unequip the selected item
-    for (let i = 0; i < newClothing.length; i++) {
-      if (newClothing[i].id === id) {
-        const wasEquipped = newClothing[i].equipped;
-        newClothing[i].equipped = !wasEquipped;
+    setClothing(prev => {
+      const newClothing = [...prev];
+      //loop through clothing to equip/unequip the selected item
+      for (let i = 0; i < newClothing.length; i++) {
+        if (newClothing[i].id === id) {
+          const wasEquipped = newClothing[i].equipped;
+          newClothing[i].equipped = !wasEquipped;
+        }
+        else {
+          newClothing[i].equipped = false; //ALWAYS UNEQUIP WHATEVER ELSE IS ON
+        }
       }
-      else {
-        newClothing[i].equipped = false; //ALWAYS UNEQUIP WHATEVER ELSE IS ON
-      }
-    }
-    return newClothing;
-  });
+      return newClothing;
+    });
   }
 
   //FURNITURE LOGIC ---------------------
   //adds furniture to the inventory
-  function buyFurniture(id: string, name: string, category: string, moodBoost: number) {
+  function buyFurniture(id: string, name: string, category: string, moodBoost: number, icon?: any) {
     setFurnitureOwned(prev => {
       const newFurniture = [...prev];
       let found = false;
-
-      //check if furniture is owned
       for (let i = 0; i < newFurniture.length; i++) {
         if (newFurniture[i].id === id) {
           newFurniture[i].owned = true;
@@ -205,9 +204,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           break;
         }
       }
-      //if not found, add new furniture
       if (!found) {
-        newFurniture.push({ id, name, category, moodBoost, owned: true, placed: false });
+        newFurniture.push({ id, name, category, moodBoost, owned: true, placed: false, icon });
       }
       return newFurniture;
     });
@@ -218,11 +216,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   //example, u can use the blue wall and blue chair at the same time, but not green wall and blue wall
   function placeFurniture(id: string) {
     const newFurniture = [...furnitureOwned];
-
     //find the category of the furniture being placed
     let targetCategory = "";
     let placed = false;
-
     //find the furniture item being placed and get its category and current placed status
     for (let i = 0; i < newFurniture.length; i++) {
       if (newFurniture[i].id === id) {
@@ -232,7 +228,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }
     //loop through furniture to unequip same category and place the selected one
     for (let i = 0; i < newFurniture.length; i++) {
-
       //unequip furniture of same type
       if (newFurniture[i].category === targetCategory) {
         newFurniture[i].placed = false;
@@ -245,18 +240,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setFurnitureOwned(newFurniture);
   }
 
-  //ROOM LOGIC ---------------------
-  //define the default room you start with
-  const [rooms, setRooms] = useState<Room[]>([
-    {id: "gray", name: "Gray Room", owned:true, equipped: true}
-  ]);
-
-  function buyRoom(id: string, name: string) {
+  function buyRoom(id: string, name: string, icon?: any) {
     setRooms(prev => {
       const newRooms = [...prev];
       let found = false;
-
-      //check if room is owned
       for (let i = 0; i < newRooms.length; i++) {
         if (newRooms[i].id === id) {
           newRooms[i].owned = true;
@@ -264,9 +251,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           break;
         }
       }
-      //if not found, add new room
       if (!found) {
-        newRooms.push({ id, name, owned: true, equipped: false });
+        newRooms.push({ id, name, owned: true, equipped: false, icon });
       }
       return newRooms;
     });
@@ -277,11 +263,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setRooms(prev => {
       const newRooms = [...prev];
       for (let i = 0; i < newRooms.length; i++) {
-        if (newRooms[i].id === id) {
-          newRooms[i].equipped = true;
-        } else {
-          newRooms[i].equipped = false;
-        }
+        newRooms[i].equipped = newRooms[i].id === id;
       }
       return newRooms;
     });

@@ -14,26 +14,31 @@ type AppButtonProps = {
   fullWidth?: boolean;
   variant?: "default" | "square";
   themeColors: ThemeColors;
+  small?: boolean;
+  transparent?: boolean;
 };
 
-export default function AppButton({ onPress, label, disabled, active, fullWidth, variant = "default", themeColors }: AppButtonProps) {
-  const backgroundColor = disabled
+export default function AppButton({ onPress, label, disabled, active, fullWidth, variant = "default", themeColors, small, transparent }: AppButtonProps) {
+  const backgroundColor = transparent
+    ? "rgba(128, 128, 128, 0.2)"
+    : disabled
     ? "#999"
     : active
     ? darkenColor(themeColors.primary)
     : themeColors.primary;
 
-  return (
+   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
       style={[
         variant === "square" ? styles.squareButton : styles.button,
         fullWidth && styles.buttonFullWidth,
+        small && styles.buttonSmall,
         { backgroundColor },
       ]}
     >
-      <Text style={styles.buttonText} numberOfLines={2}>
+      <Text style={[styles.buttonText, small && styles.buttonTextSmall]} numberOfLines={2}>
         {label}
       </Text>
     </Pressable>
@@ -64,9 +69,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 12,
+    fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
     paddingHorizontal: 2,
+    fontFamily: "Pixgamer",
+  },
+  buttonSmall: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    minWidth: 0,
+  },
+  buttonTextSmall: {
+    fontSize: 10,
   },
 });
