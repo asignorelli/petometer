@@ -5,7 +5,7 @@ import { sharedStyles } from "@/constants/sharedStyles";
 import { useGame } from "@/context/context";
 import { getThemeColors } from "@/utils/getThemeColors";
 import { useRef, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 //
 //--------------  PET SCREEN ------------------------
 //
@@ -185,6 +185,14 @@ export default function PetScreen() {
     }
   }
 
+  //used for happiness bar changing with happy boost
+  function getHappyBarImage() {
+    if (displayHappiness <= 0) return require('@/assets/images/icons/dead_bar.png');
+    if (displayHappiness <= 20) return require('@/assets/images/icons/sad_bar.png');
+    if (displayHappiness <= 50) return require('@/assets/images/icons/neutral_bar.png');
+    return require('@/assets/images/icons/happy_bar.png');
+  }
+
   const PANEL_HEIGHT = 150;
 
   //RENDER ---------------------------
@@ -211,7 +219,7 @@ export default function PetScreen() {
           <Image source={require('@/assets/images/furniture/cattree.png')} style={{ position: "absolute", width: 150, height: 250, bottom: 100, left: "60%" }} resizeMode="contain" />
         )}
         {isPlaced("lamp") && (
-          <Image source={require('@/assets/images/furniture/lamp.png')} style={{ position: "absolute", width: 80, height: 80, top: 30, left: "40%" }} resizeMode="contain" />
+          <Image source={require('@/assets/images/furniture/lamp.png')} style={{ position: "absolute", width: 80, height: 80, top: 30, left: "52%" }} resizeMode="contain" />
         )}
         {isPlaced("mousetoy") && (
           <Image source={require('@/assets/images/furniture/mousetoy.png')} style={{ position: "absolute", width: 40, height: 40, bottom: 25, left: 115 }} resizeMode="contain" />
@@ -242,17 +250,72 @@ export default function PetScreen() {
       <View style={[sharedStyles.container, { backgroundColor: "transparent" }]}>
         <View style={sharedStyles.topRow}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: themeColors.text }}>Health: {petHealth}</Text>
-            <Text style={{ color: themeColors.text }}>Happiness: {displayHappiness}</Text>
+
+            <View style={{ width: 150, height: 20, position: "relative", marginBottom: 6, right: 10 }}>
+              <View style={{ position: "absolute", width: `${petHealth}%`, height: "100%", backgroundColor: "rgb(202, 8, 8)", top: 5, left: 13 }} />
+              <Image
+                source={require('@/assets/images/icons/health_bar.png')}
+                style={{ position: "absolute", width: "120%", height: "250%", left: -12, top: -10 }}
+                resizeMode="contain"
+              />
+            </View>
+
+            <View style={{ width: 150, height: 20, position: "relative", marginBottom: 6, bottom: -4, right: 10 }}>
+              <View style={{ position: "absolute", width: `${displayHappiness}%`, height: "80%", backgroundColor: "gold", top: 6, left: 13, borderRadius: 4 }} />
+              <Image
+                source={getHappyBarImage()}
+                style={{ position: "absolute", width: "120%", height: "250%", left: -12, top: -10 }}
+                resizeMode="contain"
+              />
+            </View>
           </View>
           <CoinDisplay amount={coinBal} themeColors={themeColors} />
         </View>
 
-        <View style={{ position: "absolute", left: 0, top: "20%" }}>
-          <AppButton onPress={() => setOpenPanel(openPanel === "food" ? null : "food")} label="food" themeColors={themeColors} />
-          <AppButton onPress={() => setOpenPanel(openPanel === "clothing" ? null : "clothing")} label="clothing" themeColors={themeColors} />
-          <AppButton onPress={() => setOpenPanel(openPanel === "furniture" ? null : "furniture")} label="furniture" themeColors={themeColors} />
-          <AppButton onPress={() => setOpenPanel(openPanel === "room" ? null : "room")} label="room" themeColors={themeColors} />
+        <View style={{ position: "absolute", left: 0, top: "15%" }}>
+          <Pressable
+            onPress={() => setOpenPanel(openPanel === "food" ? null : "food")}
+            style={{
+              width: 40, height: 40,
+              backgroundColor: openPanel === "food" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.25)",
+              borderRadius: 8, justifyContent: "center", alignItems: "center", marginBottom: 10, marginLeft: 3,
+            }}
+          >
+            <Image source={require('@/assets/images/icons/food_icon.png')} style={{ width: 50, height: 50, marginTop: 5 }} resizeMode="contain" />
+          </Pressable>
+
+          <Pressable
+            onPress={() => setOpenPanel(openPanel === "clothing" ? null : "clothing")}
+            style={{
+              width: 40, height: 40,
+              backgroundColor: openPanel === "clothing" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.25)",
+              borderRadius: 8, justifyContent: "center", alignItems: "center", marginBottom: 10, marginLeft: 3,
+            }}
+          >
+            <Image source={require('@/assets/images/icons/tshirt_icon.png')} style={{ width: 40, height: 40 }} resizeMode="contain" />
+          </Pressable>
+
+          <Pressable
+            onPress={() => setOpenPanel(openPanel === "furniture" ? null : "furniture")}
+            style={{
+              width: 40, height: 40,
+              backgroundColor: openPanel === "furniture" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.25)",
+              borderRadius: 8, justifyContent: "center", alignItems: "center", marginBottom: 10, marginLeft: 3,
+            }}
+          >
+            <Image source={require('@/assets/images/icons/furniture_icon.png')} style={{ width: 40, height: 40 }} resizeMode="contain" />
+          </Pressable>
+
+          <Pressable
+            onPress={() => setOpenPanel(openPanel === "room" ? null : "room")}
+            style={{
+              width: 40, height: 40,
+              backgroundColor: openPanel === "room" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.25)",
+              borderRadius: 8, justifyContent: "center", alignItems: "center", marginLeft: 3,
+            }}
+          >
+            <Image source={require('@/assets/images/icons/paint_icon.png')} style={{ width: 40, height: 40 }} resizeMode="contain" />
+          </Pressable>
         </View>
 
         <View style={sharedStyles.demoCorner}>

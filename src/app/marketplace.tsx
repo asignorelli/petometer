@@ -59,10 +59,11 @@ export default function MarketplaceScreen() {
   const themeColors = getThemeColors(rooms);
 
   const screenWidth = Dimensions.get("window").width;
-  const panelPadding = 16; // matches your panel's padding
-  const cardGap = 8; // total gap per card (4 margin each side, or similar)
+  const panelPadding = 16;
+  const cardGap = 8;
   const cardWidth = (screenWidth - panelPadding * 2 - cardGap * 3) / 3;
-  const cardHeight = cardWidth * 1.3; // taller than wide, adjust ratio to taste
+  const cardHeight = cardWidth * 1.3;
+  const [justBoughtId, setJustBoughtId] = useState<string | null>(null); //for food darkened
 
   const shopItems: ShopItem[] = [
     //clothes
@@ -96,7 +97,7 @@ export default function MarketplaceScreen() {
     { id: "plant", name: "Plant", type: "furniture", category: "plant", cost: 70, moodBoost: 7, icon: require('@/assets/images/furniture/plant.png') },
     { id: "scratchpost", name: "Scratch Post", type: "furniture", category: "scratchpost", cost: 110, moodBoost: 11, icon: require('@/assets/images/furniture/scratchpost.png') },
     { id: "window", name: "Window", type: "furniture", category: "window", cost: 80, moodBoost: 8, icon: require('@/assets/images/furniture/window.png') },
-    
+
     //rooms
     { id: "coral", name: "Coral Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/coralRoom.png') },
     { id: "tan", name: "Tan Room", type: "room", cost: 200, icon: require('@/assets/images/rooms/tanRoom.png') },
@@ -174,6 +175,8 @@ export default function MarketplaceScreen() {
     //add to inventory based on type
     if (item.type === "food") {
       addFood(item.id, item.name, item.healthValue, item.icon);
+      setJustBoughtId(item.id);
+      setTimeout(() => setJustBoughtId(null), 100);
     }
     else if (item.type === "clothing") {
       buyClothing(item.id, item.name, item.moodBoost, item.icon);
@@ -239,6 +242,7 @@ export default function MarketplaceScreen() {
                     icon={item.icon}
                     iconSize={item.type === "food" || item.type === "clothing" ? 65 : 100}
                     disabled={blocked}
+                    active={item.id === justBoughtId}
                     onPress={() => buyItem(item.id)}
                     themeColors={themeColors}
                   />
