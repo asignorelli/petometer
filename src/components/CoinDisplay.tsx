@@ -1,5 +1,5 @@
+import { formatCoinAmount } from "@/utils/formatNumber";
 import { Image, Text, View } from "react-native";
-
 //this is reused as it must appear on each screen
 //this will make it easier when i want to add my assets
 type ThemeColors = { text: string };
@@ -11,7 +11,7 @@ export default function CoinDisplay({ amount, themeColors }: { amount: number; t
       <View
         style={{
           position: "absolute",
-          left: 28, // skip past the coin icon portion
+          left: 28,
           right: 11,
           top: 10,
           bottom: 10,
@@ -24,8 +24,8 @@ export default function CoinDisplay({ amount, themeColors }: { amount: number; t
         style={{ position: "absolute", width: "110%", height: "110%" }}
         resizeMode="contain"
       />
-      <Text style={{ fontSize: 22, color: "black", textAlign: "center", marginLeft: 50, fontFamily: "Ithaca" }}>
-        {amount}
+      <Text style={{ fontSize: 20, color: "black", textAlign: "center", marginLeft: 38, fontFamily: "Ithaca" }}>
+        {formatCoinAmount(amount)}
       </Text>
     </View>
   );

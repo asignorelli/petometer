@@ -52,10 +52,10 @@ export default function StepsScreen() {
   }
   //add steps and check if you reached the goal
   function addSteps() {
-    const newSteps = steps + 500;
+    const newSteps = steps + 5000;
     goalReached(newSteps, stepGoal, steps, stepGoal);
     setSteps(newSteps);
-    setStepBank(prevBank => prevBank + 500);
+    setStepBank(prevBank => prevBank + 5000);
   }
 
   function resetSteps() {
@@ -63,6 +63,7 @@ export default function StepsScreen() {
     setStepGoal(10000);
     setStepBank(0);
     updateStreak(0);
+    resetCoinBalance();
   }
 
   /*coin logic functions
