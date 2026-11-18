@@ -1,35 +1,13 @@
-for assets
 
-and make the coins go 99,999... to not break the layout
-
-also need assets for
-
-DEMO BUTTONS CAN STAY THE SAME AS THEY ARE, JUST MAKE THEM GRAY AND SMALLERISH
-
-MAKE PET AND MARKETPLACE BUTTONS DARKEN WHEN U CLICK THEM!
-
-STEP TAB
-coin box (just a coin logo with like a transparent gray/black box for the text)
-buttons for 
--collect coins
--daily goals (make them say like (+100 coin) on the right )
-
--little settings logo to go by the streak goal, which will bring up the buttons
-(maybe up and down arrow with large goal?)
--little flame logo to go by the actual streak at the top
--coin logo + box
--step goal box (should show up when u click the goal)
-
-PET TAB
+make the coins go 99,999... to not break the layout
 
 
 then
-make step tab center designed
 fix any formatting
 -work on health decay/happiness decay
 -pet death, itll die and say respawn idk
--give food marketplace a dark thing when u tap so u know when u buy, maybe a chaching noise
 -real step counting?
 -real streak counting?
 -animations? lol
--sound effects?
+-sound effects? music?
+-pet the cat and it will have hearts or change image, and purr 

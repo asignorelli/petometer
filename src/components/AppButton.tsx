@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "600",
     textAlign: "center",
     paddingHorizontal: 2,

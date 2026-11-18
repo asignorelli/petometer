@@ -8,6 +8,6 @@ export const sharedStyles = StyleSheet.create({
   cardLabel: { marginBottom: 4, fontFamily: "Pixgamer", fontSize: 25 },
   barTrack: { height: 14, borderWidth: 1, borderColor: "#aaa", borderRadius: 7, marginBottom: 4, overflow: "hidden" },
   demoCorner: { position: "absolute", bottom: 10, right: 10 },
-  bigNumber: { fontSize: 78, textAlign: "center", fontFamily: "Ithaca" },
+  bigNumber: { fontSize: 100, textAlign: "center", fontFamily: "Ithaca" },
   subText: { textAlign: "center", fontSize: 25, fontFamily: "Virtupet" },
 });

@@ -207,7 +207,7 @@ export default function MarketplaceScreen() {
           marginTop: 10,
         }}
       >
-        {/* tabs, flush at top, no borders */}
+        
         <View style={{ flexDirection: "row" }}>
           {(["food", "clothing", "furniture", "room"] as const).map((cat, index) => (
             <Pressable
@@ -229,7 +229,7 @@ export default function MarketplaceScreen() {
           ))}
         </View>
 
-        {/* grid content, padded, pushed below tabs */}
+
         <View style={{ flex: 1, padding: 16 }}>
           <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap", top: 30 }}>
             {filteredItems.map(item => {

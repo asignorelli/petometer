@@ -248,7 +248,7 @@ export default function PetScreen() {
       </View>
 
       <View style={[sharedStyles.container, { backgroundColor: "transparent" }]}>
-        <View style={sharedStyles.topRow}>
+        <View style={[sharedStyles.topRow, { alignItems: "flex-start" }]}>
           <View style={{ flex: 1 }}>
 
             <View style={{ width: 150, height: 20, position: "relative", marginBottom: 6, right: 10 }}>
